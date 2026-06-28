@@ -15,8 +15,10 @@ sudo sh <<EOF
     ufw enable
 
     [ ! -d /etc/tlp.d ] && mkdir -p /etc/tlp.d
-    printf "START_CHARGE_THRESH_BAT0=75\nSTOP_CHARGE_THRESH_BAT0=80\n" > \
-        /etc/tlp.d/99-bat.conf
+    printf "START_CHARGE_THRESH_BAT0=75\n" > /etc/tlp.d/99-bat.conf
+    printf "STOP_CHARGE_THRESH_BAT0=80\n" >> /etc/tlp.d/99-bat.conf
+    printf "START_CHARGE_THRESH_BAT1=75\n" >> /etc/tlp.d/99-bat.conf
+    printf "STOP_CHARGE_THRESH_BAT1=80\n" >> /etc/tlp.d/99-bat.conf
     tlp start
 
     [ ! -d /etc/ssh/sshd_config.d ] && mkdir -p /etc/ssh/sshd_config.d
