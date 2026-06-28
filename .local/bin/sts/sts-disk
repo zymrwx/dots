@@ -1,0 +1,10 @@
+#!/bin/sh
+# Print root partition's disk usage in percentage
+
+icon=""
+
+df -P / | {
+    read -r _
+    read -r _ _ _ _ pct _
+    printf '%s %s\n' "$icon" "$pct"
+}
