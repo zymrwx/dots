@@ -88,6 +88,8 @@
 !/.config/nsxiv/exec/key-handler
 !/.config/nvim/
 !/.config/nvim/lua/
+!/.config/nvim/lua/config/
+!/.config/nvim/lua/config/autocmds.lua
 !/.config/nvim/lua/plugins/
 !/.config/nvim/lua/plugins/*
 !/.config/nvim/init.lua
