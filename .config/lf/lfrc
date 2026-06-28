@@ -1,0 +1,38 @@
+source '~/.config/lf/autocmds.lf'
+source '~/.config/lf/bindings.lf'
+source '~/.config/lf/opener.lf'
+source '~/.config/lf/local.lf'
+
+set previewer "~/.config/lf/previewer.sh"
+set rulerfile "~/.config/lf/ruler.go"
+
+set shell "/bin/sh"
+set shellopts "-eu"
+set ifs "\n"
+
+set watch true
+set preview true
+set preload true
+
+set promptfmt "\033[30;47m%u@%h\033[00m %d%fm"
+set numberfmt "\033[90m"
+
+set dircounts true
+set dirfirst true
+set info custom:size:time
+
+set number true
+set relativenumber true
+
+set filtermethod regex
+
+set timefmt "2006-01-02 15:04"
+set infotimefmtnew "2006-01-02 15:04"
+set infotimefmtold "2006-01-02 15:04"
+
+#set ratios 1:4:5
+set ratios 1:1
+
+set drawbox
+
+set mergeindicators true

@@ -1,0 +1,11 @@
+#!/bin/sh
+# Color picker
+
+notify-send "${0##*/}" "picker a color"
+
+geo=$(slop -f '%g' 2>/dev/null)
+
+color=$(import -window root -crop "${geo}" -depth 8 txt:- 2>/dev/null | \
+        awk 'NR==2 {print $3}' | tr -d 'srgb:')
+
+notify-send "${0##*/}" "$color"

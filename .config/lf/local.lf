@@ -1,0 +1,4 @@
+# vim:ft=lf
+
+setlocal ~/doc/dots hidden!
+setlocal ~/dots hidden!

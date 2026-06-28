@@ -1,0 +1,32 @@
+#!/bin/sh
+# Mirror local pacman caches via http
+
+cache_dir="/var/cache/pacman/pkg"
+ip_addr="$1"
+
+cleanup() {
+    ufw delete allow from 192.168.0.0/16 to any port 8080
+}
+
+if [ ! "$UID" -eq 0 ]; then
+    cat << EOF
+You must run this script as root:
+
+sudo $0
+EOF
+    exit 1
+fi
+
+trap cleanup EXIT INT TERM HUP QUIT
+
+cat <<EOF
+On another 's /etc/pacman.d/mirrorlist add on top:
+
+# IP of this host
+CacheServer = http://192.168.x.x:8080
+
+EOF
+
+ufw allow from 192.168.0.0/16 to any port 8080
+
+python -m http.server -d "$cache_dir" 8080

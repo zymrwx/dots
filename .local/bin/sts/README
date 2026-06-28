@@ -1,0 +1,5 @@
+Status scripts written in POSIX shell with minimal process forking.
+
+Each script prints one line system information to STDOUT.
+
+Works well with software like dwmblocks.

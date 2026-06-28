@@ -1,0 +1,35 @@
+$include /etc/inputrc
+
+# Enable vi cursor shapes
+set show-mode-in-prompt on
+
+# Terminal-specific cursor shape sequences
+$if term=linux
+	set vi-ins-mode-string \1\e[?0c\2
+	set vi-cmd-mode-string \1\e[?8c\2
+$else
+	set vi-ins-mode-string \1\e[6 q\2
+	set vi-cmd-mode-string \1\e[2 q\2
+$endif
+
+# Cycle through instead of listing suggestions
+"\t": menu-complete
+Control-n: menu-complete
+Control-p: menu-complete-backward
+
+# Case insensitive filename matching
+set completion-ignore-case on
+# Show completions on first Tab press
+set show-all-if-ambiguous on
+set show-all-if-unmodified on
+
+# Appends type indicators in Readline
+set visible-stats On
+set mark-symlinked-directories On
+
+# Colorize file types in completions lists
+set colored-stats on
+# Highlight typed words in suggestions
+set colored-completion-prefix On
+# Highlight common prefix in menu mode
+set menu-complete-display-prefix On

@@ -1,0 +1,4 @@
+#!/bin/sh
+# abduco with dvtm
+
+abduco -A "dvtm" dvtm-status

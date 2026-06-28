@@ -1,0 +1,22 @@
+#!/bin/sh
+# Screenshot script
+
+scr_dir="$HOME/tmp/scr"
+scr="$(date +%Y-%m-%d-%H-%M-%S).png"
+scr="$scr_dir/$scr"
+
+[ ! -d "$scr_dir" ] && mkdir -p "$scr_dir"
+
+scr_all() {
+    maim "$scr"
+}
+
+scr_geo() {
+    maim -g "$(slop)" "$scr"
+}
+
+case "$1" in
+    -g) scr_geo ;;
+    *)  scr_all ;;
+esac
+

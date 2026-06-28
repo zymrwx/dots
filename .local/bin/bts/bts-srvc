@@ -1,0 +1,33 @@
+#!/bin/sh
+
+sudo sh <<EOF
+    systemctl enable --now NetworkManager.service
+
+    systemctl enable systemd-boot-update.service
+    systemctl enable systemd-timesyncd.service
+    systemctl enable tlp.service
+    systemctl enable ufw.service
+    systemctl enable sshd.service
+    systemctl enable cronie.service
+    systemctl enable paccache.timer
+
+    ufw allow from 192.168.0.0/16 to any app SSH
+    ufw enable
+
+    [ ! -d /etc/tlp.d ] && mkdir -p /etc/tlp.d
+    printf "START_CHARGE_THRESH_BAT0=75\nSTOP_CHARGE_THRESH_BAT0=80\n" > \
+        /etc/tlp.d/99-bat.conf
+    tlp start
+
+    [ ! -d /etc/ssh/sshd_config.d ] && mkdir -p /etc/ssh/sshd_config.d
+    printf "PasswordAuthentication no\n" >\
+        /etc/ssh/sshd_config.d/99-auth.conf
+
+    [ ! -d /etc/systemd/sleep.conf.d ] && mkdir -p /etc/systemd/sleep.conf.d
+    printf "[Sleep]\nHibernateMode=shutdown\n" > \
+        /etc/systemd/sleep.conf.d/99-hibernate.conf
+
+    [ ! -d /etc/systemd/logind.conf.d ] && mkdir -p /etc/systemd/logind.conf.d
+    printf "[Login]\nHandlePowerKey=hibernate\n" > \
+        /etc/systemd/logind.conf.d/99-powerkey.conf
+EOF

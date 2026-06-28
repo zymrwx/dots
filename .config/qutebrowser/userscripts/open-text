@@ -1,0 +1,6 @@
+#!/bin/sh
+# View the plain text of the current URL
+
+terminal="st -T _floating_"
+
+$terminal $EDITOR "$QUTE_TEXT"

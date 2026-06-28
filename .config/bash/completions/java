@@ -1,0 +1,10 @@
+# vim:ft=bash
+# Add *.java files to suggestion
+
+_java()
+{
+    local files=(*.java)
+    COMPREPLY=($(compgen -W "${files[*]}" -- "${COMP_WORDS[COMP_CWORD]}"))
+}
+
+complete -F _java java

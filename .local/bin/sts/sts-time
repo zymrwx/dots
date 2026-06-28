@@ -1,0 +1,24 @@
+#!/bin/sh
+# Print time and date
+
+value="$(date '+%m-%d %a %H:%M')"
+
+hour="${value##* }"  # Remove date (before space)
+hour="${hour%:*}"   # Remove minute (after colon)
+
+case "$hour" in
+    01|13) icon="󱐿" ;;
+    02|14) icon="󱑀" ;;
+    03|15) icon="󱑁" ;;
+    04|16) icon="󱑂" ;;
+    05|17) icon="󱑃" ;;
+    06|18) icon="󱑄" ;;
+    07|19) icon="󱑅" ;;
+    08|20) icon="󱑆" ;;
+    09|21) icon="󱑇" ;;
+    10|22) icon="󱑈" ;;
+    11|23) icon="󱑉" ;;
+    12|00) icon="󱑊" ;;
+esac
+
+printf '%s %s\n' "$icon" "$value"

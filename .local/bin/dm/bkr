@@ -1,0 +1,8 @@
+#!/bin/sh
+# Book reader
+
+book_dir="$HOME/doc/books"
+
+book="$(find "$book_dir" -type f | dmenu -i -l 9)"
+
+[ -f "$book" ] && zathura "$book"

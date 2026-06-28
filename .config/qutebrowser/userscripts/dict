@@ -1,0 +1,10 @@
+#!/bin/sh
+# Search the currently selected word with dictd
+
+tmp=${XDG_RUNTIME_DIR}/qutebrowser/qutedict
+
+terminal="st -T _floating_"
+
+dict $QUTE_SELECTED_TEXT > "$tmp" 2>&1
+
+$terminal less "$tmp"

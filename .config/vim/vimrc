@@ -1,0 +1,27 @@
+source ${HOME}/.config/vim/autocmds/*
+
+set viminfofile=~/.cache/vim/viminfo
+
+set number
+set relativenumber
+
+set expandtab
+set tabstop=4
+set shiftwidth=4
+set smartindent
+
+set ignorecase
+set smartcase
+
+syntax on
+set hlsearch
+
+highlight ExtraSpace ctermbg=gray guibg=gray
+match ExtraSpace /\s\+$/
+
+colorscheme default
+set background=dark
+set laststatus=2
+
+" On Arch Linux install gvim to use X clipboard
+set clipboard=unnamedplus

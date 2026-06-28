@@ -1,0 +1,69 @@
+{
+    "editor.autoClosingBrackets": "never",
+    "editor.autoClosingComments": "never",
+    "editor.autoClosingDelete": "never",
+    "editor.autoClosingOvertype": "never",
+    "editor.autoClosingQuotes": "never",
+    "editor.autoSurround": "never",
+    "editor.comments.insertSpace": false,
+    "editor.cursorBlinking": "solid",
+    "editor.fontFamily": "Source Code Pro",
+    "editor.fontSize": 14,
+    "editor.glyphMargin": false,
+    "editor.lineDecorationsWidth": 0,
+    "editor.lineNumbers": "relative",
+    "editor.minimap.enabled": false,
+    "editor.renderWhitespace": "trailing",
+    "editor.scrollbar.horizontalScrollbarSize": 1,
+    "editor.scrollbar.verticalScrollbarSize": 1,
+    "editor.wordWrap": "on",
+
+    "explorer.confirmDelete": false,
+    "workbench.colorCustomizations":{
+        "activityBar.background": "#111111",
+        "editor.background": "#111111",
+        "editorGutter.background": "#111111",
+        "editorLineNumber.activeForeground": "#aaaaaa",
+        "editorLineNumber.foreground": "#444444",
+        "sideBar.background": "#111111",
+        "statusBar.background": "#aaaaaa",
+        "statusBar.foreground": "#111111"
+    },
+    "workbench.editor.showTabs": "none",
+    "workbench.secondarySideBar.defaultVisibility": "hidden",
+    "workbench.startupEditor": "newUntitledFile",
+
+    "window.customTitleBarVisibility": "never",
+    "window.menuBarVisibility": "toggle",
+    "window.titleBarStyle": "native",
+    "window.zoomLevel": 1.5,
+    "window.zoomPerWindow": false,
+
+    "keyboard.dispatch": "keyCode",
+
+    "extensions.autoCheckUpdates": false,
+    "extensions.autoUpdate": "off",
+
+    "redhat.telemetry.enabled": false,
+    "vim.useSystemClipboard": true,
+    "vim.foldfix": true,
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+            "before": ["O"],
+            "commands": ["editor.action.insertLineBefore"],
+            "after": ["i"]
+        }
+    ],
+    "zoomer.zoomIncrement": 0.1,
+
+    "chat.disableAIFeatures": true,
+    "chat.extensionUnification.enabled": false,
+    "extensions.experimental.issueQuickAccess": false,
+    "extensions.ignoreRecommendations": true,
+    "telemetry.editStats.enabled": false,
+    "telemetry.feedback.enabled": false,
+    "telemetry.telemetryLevel": "off",
+    "workbench.commandPalette.experimental.enableNaturalLanguageSearch": false,
+    "workbench.enableExperiments": false,
+    "workbench.settings.enableNaturalLanguageSearch": false
+}

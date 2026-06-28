@@ -1,0 +1,40 @@
+# Unbind
+unbind common a
+unbind common c
+unbind common N
+unbind common n
+unbind common p
+unbind common P
+unbind common space
+
+# Bind
+
+bind common n player-next
+bind common N player-next-album
+
+bind common p player-prev
+bind common P player-prev-album
+
+bind common space player-pause
+
+bind common c toggle continue
+
+# Default
+bind common a toggle aaa_mode
+#bind common M toggle play_library
+#bind common q quit -i
+#bind common r toggle repeat
+#bind common ^R toggle repeat_current
+#bind common t toggle show_remaining_time
+#bind common s toggle shuffle
+#bind common f toggle follow
+
+#bind common ^B win-page-up
+#bind common ^F win-page-down
+#bind common ^U win-half-page-up
+#bind common ^D win-half-page-down
+
+#bind common k win-up
+#bind common j win-down
+#bind common g win-top
+#bind common G win-bottom

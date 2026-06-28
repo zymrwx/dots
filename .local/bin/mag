@@ -1,0 +1,22 @@
+#!/bin/sh
+# Magnifier screen
+
+screenshot="$XDG_RUNTIME_DIR/mag.tmp"
+view_cmd="nsxiv -f --no-bar --name "_mag_" "$screenshot""
+
+cleanup() {
+    rm -f "$screenshot"
+}
+
+capture() {
+    maim -f "png" -m 1 -u "$screenshot" || exit 0
+}
+
+trap cleanup EXIT INT TERM HUP QUIT
+
+if pgrep -f "$view_cmd"; then
+    pkill -f "$view_cmd"
+else
+    capture && $view_cmd
+fi
+

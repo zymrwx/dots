@@ -1,0 +1,83 @@
+# vim:ft=lf
+
+# Update git prompt
+cmd on-cd &{{
+    bash -c '
+    git_prompt="/usr/share/git/completion/git-prompt.sh"
+    [ -f "$git_prompt" ] && . "$git_prompt"
+
+    GIT_PS1_SHOWDIRTYSTATE=1
+    GIT_PS1_SHOWSTASHSTATE=1
+    GIT_PS1_SHOWUNTRACKEDFILES=1
+    GIT_PS1_SHOWUPSTREAM=1
+    GIT_PS1_DESCRIBE_STYLE=1
+    GIT_PS1_SHOWCOLORHINTS=1
+
+    fmt="\033[30;47m%u@%h\033[00m %d%f$(__git_ps1 " %s")"
+    lf -remote "send $id set promptfmt \"$fmt\""
+    '
+}}
+
+# Update git status in custom info
+cmd on-load &{{
+    cd "$(dirname "$1")" || exit 1
+    [ "$(git rev-parse --is-inside-git-dir 2>/dev/null)" = false ] || exit 0
+
+    cmds=""
+
+    for file in "$@"; do
+        [ -f "$file" ] || continue
+        case "$file" in
+            */.git|*/.git/*) continue;;
+        esac
+
+        status=$(git status --porcelain --ignored -- "$file" | cut -c1-2 | head -n1)
+
+        if [ -n "$status" ]; then
+            cmds="${cmds}addcustominfo \"${file}\" \"$status\"; "
+        else
+            cmds="${cmds}addcustominfo \"${file}\" ''; "
+        fi
+    done
+
+    if [ -n "$cmds" ]; then
+        lf -remote "send $id :$cmds"
+    fi
+}}
+
+# Update user options in ruler
+cmd on-select &{{
+    extrainfo=""
+
+    case "$(file --mime-type -Lb "$f")" in
+        audio/*)
+            extrainfo="$(mediainfo --Output="Audio;%BitRate/String% %Duration/String%" -- "$f")"
+            ;;
+        image/*)
+            extrainfo="$(exiftool -s3 -imagesize -- "$f")"
+            ;;
+        video/*)
+            extrainfo="$(mediainfo --Output="Video;%Width%x%Height% %Duration/String%" -- "$f")"
+            ;;
+        text/*)
+            extrainfo="$(wc -l -- "$f" | cut -d' ' -f1)"
+            ;;
+        inode/directory)
+            extrainfo="$(du -hs -- "$f" | cut -f1)"
+            ;;
+        *)
+            extrainfo="$(file --mime-type -Lb "$f")"
+            ;;
+    esac
+
+    if [ -n "$extrainfo" ]; then
+        lf -remote "send $id :set user_extrainfo \"[$extrainfo]\""
+    else # clear previous value
+        lf -remote "send $id :set user_extrainfo ''"
+    fi
+}}
+
+cmd on-init &{{
+    lf -remote "send $id on-select"
+    lf -remote "send $id on-cd"
+}}

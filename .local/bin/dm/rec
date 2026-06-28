@@ -1,0 +1,99 @@
+#!/bin/sh
+# Recording screen
+
+format="mkv"
+fps="30"
+mute="0"
+
+rec_dir="$HOME/tmp/rec"
+[ ! -d "$rec_dir" ] && mkdir -p "$rec_dir"
+
+rec="$(date '+%Y-%m-%d-%H-%M-%S')"
+rec="$rec_dir/$rec"
+
+usage() {
+    cat <<EOF
+USAGE:  ${0##/*} [OPTION]
+
+Record screen in $fps fps and $format format.
+
+OPTIONS:
+
+-4
+    record in mp4 format
+
+-6
+    record in 60 fps
+
+-m
+    record without audio
+EOF
+    exit 0
+}
+
+sel_output() {
+    output="$(xrandr | grep ' connected ' | dmenu -p "output" -l 3)"
+    output="${output#*primary }"
+    output="${output%% *}"
+}
+
+sel_speaker() {
+    speaker="$(pw-dump | grep '"node.name": ' | sort | dmenu -p "speaker" -l 3)"
+    speaker="${speaker#*node.name\": \"}"
+    speaker="${speaker%\",*}"
+}
+
+run() {
+    sel_output
+
+    [ -z "$output" ] && exit 0
+
+    size="${output%%+*}"
+    pos_y="${output##*+}"
+    pos_x="${output#*$size+}"
+    pos_x="${pos_x%+$pos_y*}"
+
+    if [ "$mute" = "0" ]; then
+        sel_speaker
+        if [ -n "$speaker" ]; then
+            ffmpeg -f x11grab \
+                -framerate "$fps" \
+                -video_size "$size" -i :0.0+"$pos_x","$pos_y" \
+                -f pulse -i "$speaker" \
+                -c:v h264 \
+                -crf 0 -preset ultrafast \
+                "$rec.$format"
+        else
+            # No speaker selected
+            ffmpeg -f x11grab \
+                -framerate "$fps" \
+                -video_size "$size" -i :0.0+"$pos_x","$pos_y" \
+                -c:v h264 \
+                -crf 0 -preset ultrafast \
+                "$rec.$format"
+        fi
+    else
+        # Mute flag is set
+        ffmpeg -f x11grab \
+            -framerate "$fps" \
+            -video_size "$size" -i :0.0+"$pos_x","$pos_y" \
+            -c:v h264 \
+            -crf 0 -preset ultrafast \
+            "$rec.$format"
+    fi
+}
+
+
+if [ -z "$1" ]; then
+    run
+else
+    while [ -n "$1" ]; do
+        case "$1" in
+            -4) format="mp4" ;;
+            -6) fps="60" ;;
+            -m) mute="1" ;;
+            *) usage ;;
+        esac
+        shift
+    done && run
+fi

@@ -1,0 +1,17 @@
+#!/bin/sh
+# backup gpg keys
+
+dir="$HOME/doc/.gpg/gpg-keys-backup"
+
+printf 'Exporting keys to %s\n' "$dir"
+
+[ ! -d "$target" ] && mkdir -p "$dir"
+
+name="$(date '+%Y-%m-%d-%H-%M')"
+
+pubkey="$dir/${name}.pub"
+seckey="$dir/${name}.sec"
+
+gpg --armor --export > "$pubkey"
+
+gpg --armor --export-secret-keys > "$seckey"

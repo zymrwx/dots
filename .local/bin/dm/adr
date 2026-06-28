@@ -1,0 +1,50 @@
+#!/bin/sh
+# Address book script
+#
+# .
+# ├── emails
+# ├── gpg
+# └── urls
+#
+# Inside the files:
+# `#` are comments which doesn't appear in dmenu
+# `|` separates keywords and URL, keywords are not copied
+
+address_dir="$HOME/.local/share/adr"
+
+usage() {
+    cat <<EOF
+USAGE:  ${0##*/} [OPTION}
+
+Copy the selected entry from address board to X11 clipboard.
+
+OPTIONS:
+
+-h
+    print this usage manual
+
+-e
+    edit the select address file
+EOF
+}
+
+case "$1" in
+    -h)
+        usage
+        ;;
+    -e)
+        choice="$(ls $address_dir | dmenu -i)" &&
+            $EDITOR "$address_dir/$choice"
+        ;;
+    *)
+        # Lines starting with `#` and empty lines are ignored
+        choice="$(grep -hv '^\s*\(#.*\)\?$' "$address_dir"/*  | dmenu -i -l 9)"
+        
+        # Trim everything before the first `|` if existing
+        choice="${choice#*|}"
+        # Trim leading space is exiting
+        choice="${choice# }"
+        
+        printf '%s' "$choice" | xsel -ib
+        ;;
+esac

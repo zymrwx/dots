@@ -1,0 +1,9 @@
+#!/bin/sh
+# Wrapper script for dmenu scripts
+
+keys="bkr\n"
+
+choice="$(printf '%b' "$keys" | dmenu -i )" ||
+    exit 0
+
+exec "$choice"

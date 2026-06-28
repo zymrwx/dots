@@ -1,0 +1,13 @@
+#!/bin/sh
+# Change speaker volume
+
+case "$1" in
+    -t)
+        wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle 2>/dev/null
+        ;;
+    *)
+        wpctl set-volume @DEFAULT_AUDIO_SINK@ "$1" 2>/dev/null
+        ;;
+esac
+
+pkill -RTMIN+2 dwmblocks

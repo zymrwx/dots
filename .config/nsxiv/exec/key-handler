@@ -1,0 +1,18 @@
+#!/bin/sh
+
+delete() {
+    choice="$(printf "no\nyes" | dmenu -p "rm?")" &&
+        [ "$choice" = "yes" ] && rm "$file"
+}
+
+scan_qrcode() {
+    qrtool decode "$file" | xsel -b &&
+        notify-send "nsxiv" "Copied to clipboard"
+}
+
+while read file; do
+    case "$1" in
+        "d") delete ;;
+        "s") scan_qrcode ;;
+    esac
+done

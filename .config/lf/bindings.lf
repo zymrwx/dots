@@ -1,0 +1,159 @@
+# vim:ft=lf
+
+cmap <c-n>      cmd-menu-complete
+cmap <c-p>      cmd-menu-complete-back
+cmap <tab>      cmd-menu-complete
+cmap <backtab>  cmd-menu-complete-back
+
+map H     jump-prev
+map L     jump-next
+
+map a :rename
+map A :rename; cmd-end
+map I :rename; cmd-home
+map r push a<c-u>
+map R push A<c-u>
+
+map f :filter
+map D delete
+
+map za :set info custom:size:time
+map zt :set info custom:time
+map zs :set info custom:size
+
+cmd toggle-preview %{{
+    if [ "$lf_preview" = true ]; then
+        lf -remote "send $id :set preview false; set ratios 1"
+    else
+        lf -remote "send $id :set ratios 1:1; set preview true"
+    fi
+}}
+map zp toggle-preview
+
+map sa :{{
+    set sortby atime
+    set info custom:size:atime
+    set noreverse
+}}
+map sb :{{
+    set sortby btime
+    set info custom:size:btime
+    set noreverse
+}}
+map sc :{{
+    set sortby ctime
+    set info custom:size:ctime
+    set noreverse
+}}
+map se :{{
+    set sortby ext
+    set info custom:size:time
+    set noreverse
+}}
+map sn :{{
+    set sortby natural
+    set info custom:size:time
+    set noreverse
+
+}}
+map ss :{{
+    set sortby size
+    set info custom:size:time
+    set noreverse
+}}
+map st :{{
+    set sortby time
+    set info custom:size:time
+    set noreverse
+}}
+
+
+cmd fzf_jump ${{
+    res="$(find . | fzf)"
+    if [ -n "$res" ]; then
+        if [ -d "$res" ]; then
+            cmd="cd"
+        else
+            cmd="select"
+        fi
+        res="$(printf '%s' "$res" | sed 's/\\/\\\\/g;s/"/\\"/g')"
+        lf -remote "send $id $cmd \"$res\""
+    fi
+}}
+map F fzf_jump
+
+cmd touch %{{
+    IFS=" "
+    file="$*"
+    touch -- "$file"
+    lf -remote "
+        send $id select \"$(printf '%s' "$file" | sed 's/\\/\\\\/g;s/"/\\"/g')\"
+    "
+}}
+map o push :touch<space>
+
+cmd mkdir %{{
+    IFS=" "
+    file="$*"
+    mkdir -p -- "$file"
+    lf -remote "send $id select \"$(printf '%s' "$file" | sed 's/\\/\\\\/g;s/"/\\"/g')\""
+}}
+map O push :mkdir<space>
+
+cmd chmod %{{
+    printf "chmod $fx "
+	read perm
+    [ -z "$perm" ] && return
+    for f in $fx; do
+        chmod "$perm" "$f"
+    done
+    lf -remote "send $id reload"
+}}
+map xm chmod
+
+cmd chown %{{
+    printf "chown $fx "
+	read owner
+    [ -z "$owner" ] && return
+    for f in $fx; do
+        chown "$owner" "$f"
+    done
+    lf -remote "send $id reload"
+}}
+map xo chown
+
+cmd link %{{
+    set -- $(cat ~/.local/share/lf/files)
+    mode="$1"
+    shift
+    if [ "$#" -lt 1 ]; then
+        lf -remote "send $id echoerr no files to link"
+        exit
+    fi
+    case "$mode" in
+        copy) ln -sr -t . -- "$@";;
+        move)
+            ln -t . -- "$@"
+            lf -remote "send clear"
+            ;;
+    esac
+}}
+map P :link
+
+cmd bulk-rename ${{
+    brn
+    lf -remote "send $id unselect"
+}}
+map xb bulk-rename
+
+cmd new-lf &{{
+    st lf
+}}
+map xn new-lf
+
+cmd extract %{{
+    xtr "$f"
+    lf -remote "send clear"
+}}
+map xx extract
+

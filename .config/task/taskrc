@@ -1,0 +1,4 @@
+weekstart=monday
+
+data.location=~/.config/task/
+hooks.location=~/.config/task/

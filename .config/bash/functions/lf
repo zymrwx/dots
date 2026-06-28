@@ -1,0 +1,10 @@
+# vim:ft=bash
+
+# Avoid nested lf
+lf() {
+    if [ -z "$LF_LEVEL" ]; then
+        command lf "$@"
+    else
+        exit 0 2>/dev/null
+    fi
+}

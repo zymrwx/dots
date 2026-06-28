@@ -1,0 +1,44 @@
+#!/bin/sh
+# Print network status
+
+for i in /sys/class/net/e*/; do
+    if [ -d "$i" ]; then
+        read -r operstate < "${i}operstate" 2>/dev/null
+        # There may be multiple interfaces, break at the frist active one
+        [ "$operstate" = "up" ] && break
+    fi
+done
+
+if [ "$operstate" = "up" ]; then
+    icon="󰛳"
+    printf '%s\n' "$icon"
+else
+    for i in /sys/class/net/w*/; do
+        if [ -d "$i" ]; then
+            read -r operstate < "${i}operstate" 2>/dev/null
+            [ "$operstate" = "up" ] && break
+        fi
+    done
+
+    if [ "$operstate" = "up" ]; then
+        icon="󰖩"
+
+# $ cat /prox/net/wireless
+# Inter-| sta-|   Quality        |   Discarded packets               | Missed | WE
+#  face | tus | link level noise |  nwid  crypt   frag  retry   misc | beacon | 22
+# wlp3s0: 0000   70.  -35.  -256        0      0      0      4     12        0
+        {
+            read -r _
+            read -r _
+            read -r _ _ link_quality _
+        } < /proc/net/wireless 2>/dev/null
+        link_level=${link_quality%.}
+        value="$(( link_level * 100 / 70 ))%"
+        printf '%s %s\n' "$icon" "$value"
+    else
+        icon="󰖪"
+        printf '%s\n' "$icon"
+    fi
+fi
+
+

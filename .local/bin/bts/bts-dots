@@ -1,0 +1,56 @@
+#!/bin/sh
+
+if [ -n "$SUDO_USER" ]; then
+    printf '%s\n' "You can't run this as root." 1>&2
+    exit 1
+fi
+
+dots_dir="$HOME/doc/dots"
+
+usage() {
+    cat <<EOF
+USAGE: ${0##*/} OPTION
+
+OPTIONS:
+
+-S
+    Stow dotfiles in $dots_dir to $HOME
+-D
+    Unstow dotfiles
+-R
+    Restow dotfiles
+EOF
+    exit 0
+}
+
+ensure_dirs() {
+    mkdir -p ~/dls
+}
+
+dot_stow() {
+    ensure_dirs
+
+    stow -d "$dots_dir" -t "$HOME" .
+    exit 0
+}
+
+dot_unstow() {
+    stow -D -d "$dots_dir" -t "$HOME" .
+    exit 0
+}
+
+dot_restow() {
+    stow -R -d "$dots_dir" -t "$HOME" .
+    exit 0
+}
+
+if [ -z "$1" ]; then
+    usage
+else
+    case "$1" in
+        -S) dot_stow    ;;
+        -D) dot_unstow  ;;
+        -R) dot_restow  ;;
+        *)  usage       ;;
+    esac
+fi

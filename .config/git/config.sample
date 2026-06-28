@@ -1,0 +1,10 @@
+[user]
+    name = zym
+    email = 
+    signingkey = 
+
+[commit]
+    gpgsign = true
+
+[core]
+    pager = less -Ri
