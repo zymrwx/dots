@@ -5,6 +5,13 @@ delete() {
         [ "$choice" = "yes" ] && rm "$file"
 }
 
+rename_img() {
+    new_name="$(dmenu -p "rename: ")"
+    dir_name="${file%/*}"
+    [ -n "$new_name" ] && mv "$file" "$dir_name/$new_name"
+
+}
+
 scan_qrcode() {
     qrtool decode "$file" | xsel -b &&
         notify-send "nsxiv" "Copied to clipboard"
@@ -13,6 +20,7 @@ scan_qrcode() {
 while read file; do
     case "$1" in
         "d") delete ;;
+        "r") rename_img ;;
         "s") scan_qrcode ;;
     esac
 done
