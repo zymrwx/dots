@@ -71,8 +71,8 @@
 !/.config/lf/opener.lf
 !/.config/lf/previewer.sh
 !/.config/lf/ruler.go
-!/.config/lf/libvirt/
-!/.config/lf/libvirt/libvirt.conf
+!/.config/libvirt/
+!/.config/libvirt/libvirt.conf
 !/.config/mpv/
 !/.config/mpv/scripts/
 !/.config/mpv/scripts/mpv-cut/
