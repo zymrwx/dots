@@ -5,7 +5,8 @@ sudo sh <<'EOF'
 
     usermod -aG libvirt "$user"
 
-    systemctl enable libvirtd.service
+    systemctl enable --now libvirtd.socket
+    systemctl enable --now virtlogd.socket
 
     virsh net-define /etc/libvirt/qemu/networks/default.xml
     virsh net-start default
