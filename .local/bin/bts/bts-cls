@@ -1,0 +1,10 @@
+#!/bin/sh
+
+if [ -f "$HOME/.config/systemd/user/cls.timer" ] &&
+    [ -f "$HOME/.config/systemd/user/cls.service" ];
+then
+    systemctl --user daemon-reload
+    systemctl --user enable cls.timer
+    systemctl --user start cls.timer
+    systemctl --user list-timers --no-pager
+fi
