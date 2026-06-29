@@ -12,9 +12,6 @@ vim.opt.smartcase = true
 vim.cmd("syntax on")
 vim.opt.hlsearch = true
 
-vim.cmd("highlight ExtraSpace ctermbg=gray guibg=gray")
-vim.cmd("match ExtraSpace /\\s\\+$/")
-
 vim.cmd("colorscheme vim")
 vim.opt.background = "dark"
 vim.opt.termguicolors = false
