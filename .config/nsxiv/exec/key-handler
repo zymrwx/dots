@@ -5,6 +5,10 @@ delete() {
         [ "$choice" = "yes" ] && rm "$file"
 }
 
+show_exif() {
+    st -t _floating_ sh -c "exiftool \"$file\"  | less -R"
+}
+
 rename_img() {
     new_name="$(dmenu -p "rename: ")"
     dir_name="${file%/*}"
@@ -20,6 +24,7 @@ scan_qrcode() {
 while read file; do
     case "$1" in
         "d") delete ;;
+        "e") show_exif ;;
         "r") rename_img ;;
         "s") scan_qrcode ;;
     esac
