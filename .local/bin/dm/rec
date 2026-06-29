@@ -1,5 +1,6 @@
 #!/bin/sh
 # Recording screen
+# pipewire-pulse is required to record audio with ffmpeg
 
 format="mkv"
 fps="30"
@@ -64,13 +65,8 @@ run() {
                 -crf 0 -preset ultrafast \
                 "$rec.$format"
         else
-            # No speaker selected
-            ffmpeg -f x11grab \
-                -framerate "$fps" \
-                -video_size "$size" -i :0.0+"$pos_x","$pos_y" \
-                -c:v h264 \
-                -crf 0 -preset ultrafast \
-                "$rec.$format"
+            echo "No speaker is selected. Use -m flag to record without audio."
+            exit 1
         fi
     else
         # Mute flag is set
