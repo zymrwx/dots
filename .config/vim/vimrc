@@ -16,9 +16,6 @@ set smartcase
 syntax on
 set hlsearch
 
-highlight ExtraSpace ctermbg=gray guibg=gray
-match ExtraSpace /\s\+$/
-
 colorscheme default
 set background=dark
 set laststatus=2
