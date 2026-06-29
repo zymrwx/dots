@@ -11,7 +11,7 @@ draw_image() {
     catimg -t -w "$2" "$1"
 }
 
-case $(file --mime-type -Lb "$f") in
+case $(file --mime-type -Lb "$1") in
     image/*)
         draw_image "$1" "$2" "$3"
         ;;
