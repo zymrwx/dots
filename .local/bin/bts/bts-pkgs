@@ -48,7 +48,7 @@ add_base() {
         bash-completion
         sbctl
         efibootmgr
-        
+
         archlinux-contrib
         btop
         fzf

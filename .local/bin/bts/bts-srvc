@@ -6,15 +6,14 @@ sudo sh <<'EOF'
     systemctl enable --now NetworkManager.service
     systemctl enable --now systemd-boot-update.service
     systemctl enable --now systemd-timesyncd.service
-    systemctl enable --now tlp.service
-    systemctl enable --now sshd.service
     systemctl enable --now cronie.service
     systemctl enable --now paccache.timer
-    systemctl enable --now firewalld.timer
 
+    systemctl enable --now firewalld.timer
     firewall-cmd --permanent --add-service=ssh
     firewall-cmd --reload
 
+    systemctl enable --now tlp.service
     [ ! -d /etc/tlp.d ] && mkdir -p /etc/tlp.d
     printf "START_CHARGE_THRESH_BAT0=75\n" > /etc/tlp.d/99-bat.conf
     printf "STOP_CHARGE_THRESH_BAT0=80\n" >> /etc/tlp.d/99-bat.conf
@@ -22,6 +21,7 @@ sudo sh <<'EOF'
     printf "STOP_CHARGE_THRESH_BAT1=80\n" >> /etc/tlp.d/99-bat.conf
     tlp start
 
+    systemctl enable --now sshd.service
     [ ! -d /etc/ssh/sshd_config.d ] && mkdir -p /etc/ssh/sshd_config.d
     printf "PasswordAuthentication no\n" >\
         /etc/ssh/sshd_config.d/99-auth.conf
