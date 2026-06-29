@@ -12,7 +12,17 @@ show_exif() {
 rename_img() {
     new_name="$(dmenu -p "rename: ")"
     dir_name="${file%/*}"
-    [ -n "$new_name" ] && mv "$file" "$dir_name/$new_name"
+    new_path="$dir_name/$new_name"
+
+    if [ -n "$new_name" ] &&
+        [ -e "$new_path" ] &&
+        [ "$new_path" != "$file" ];
+    then
+        choice="$(printf "no\nyes" | dmenu -p "overwrite?")" || return 1
+        [ "$choice" != "yes" ] && return 1
+    fi
+
+    mv -f "$file" "$new_path"
 
 }
 
