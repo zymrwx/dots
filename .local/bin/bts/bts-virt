@@ -1,0 +1,13 @@
+#!/bin/sh
+
+sudo sh <<'EOF'
+    user="${SUDO_USER:-$USER}"
+
+    usermod -aG libvirt "$user"
+
+    systemctl enable libvirtd.service
+
+    virsh net-define /etc/libvirt/qemu/networks/default.xml
+    virsh net-start default
+    virsh net-autostart default
+EOF

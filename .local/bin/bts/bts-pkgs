@@ -194,9 +194,11 @@ add_gui() {
         tesseract-data-eng
         zathura
         zathura-pdf-mupdf
-        virtualbox
-        virtualbox-host-modules-arch
-        virtualbox-guest-iso
+
+        libvirt
+        virt-manager
+        qemu-desktop
+        dnsmasq
     "
 }
 

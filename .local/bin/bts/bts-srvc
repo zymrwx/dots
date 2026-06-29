@@ -3,8 +3,6 @@
 sudo sh <<'EOF'
     user="${SUDO_USER:-$USER}"
 
-    usermod -aG vboxusers "$user"
-
     systemctl enable --now NetworkManager.service
     systemctl enable --now systemd-boot-update.service
     systemctl enable --now systemd-timesyncd.service
@@ -35,4 +33,5 @@ sudo sh <<'EOF'
     [ ! -d /etc/systemd/logind.conf.d ] && mkdir -p /etc/systemd/logind.conf.d
     printf "[Login]\nHandlePowerKey=hibernate\n" > \
         /etc/systemd/logind.conf.d/99-powerkey.conf
+
 EOF
