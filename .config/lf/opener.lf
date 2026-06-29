@@ -5,13 +5,13 @@ cmd open &{{
     update_list(){
         [ -d "$XDG_RUNTIME_DIR/lf" ] || mkdir -p "$XDG_RUNTIME_DIR/lf"
         list="$XDG_RUNTIME_DIR/lf/rifle.list"
-        
+
         lf -remote "query $id files" > "$list"
-        
+
         num=$(grep -Fn "$f" "$list" | cut -d: -f1)
         head=$(tail -n +"$num" "$list")
         tail=$(head -n $((num - 1)) "$list")
-        
+
         printf '%s\n%s\n' "$head" "$tail" > "$list"
     }
 
@@ -33,7 +33,7 @@ cmd open &{{
                --playlist-start=0 \
                --loop-playlist
     }
-    
+
     open_text() {
         lf -remote "send $id \$$EDITOR -p \$fx"
     }

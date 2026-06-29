@@ -22,16 +22,16 @@ OPTIONS:
     Print usage
 _EOF_
     }
-    
+
     prox_enable() {
         export http_proxy="$prox"
         export https_proxy="$prox"
         export HTTP_PROXY="$http_proxy"
         export HTTPS_PROXY="$https_proxy"
-    
+
         prox_print
     }
-    
+
     prox_disable() {
         if [ -n "$http_proxy" ] ||
             [ -n "$https_proxy" ] ||
@@ -40,10 +40,10 @@ _EOF_
         then
             unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY
         fi
-    
+
         prox_print
     }
-    
+
     prox_print() {
         echo http_proxy="$http_proxy"
         echo https_proxy="$https_proxy"
