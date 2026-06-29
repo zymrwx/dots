@@ -1,6 +1,10 @@
 #!/bin/sh
 
-sudo sh <<EOF
+sudo sh <<'EOF'
+    user="${SUDO_USER:-$USER}"
+
+    usermod -aG vboxusers "$user"
+
     systemctl enable --now NetworkManager.service
 
     systemctl enable systemd-boot-update.service
