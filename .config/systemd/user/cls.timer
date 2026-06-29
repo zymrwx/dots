@@ -1,0 +1,9 @@
+[Unit]
+Description=Update checker for cls
+
+[Timer]
+OnUnitActiveSec=10min
+OnBootSec=10min
+
+[Install]
+WantedBy=timers.target

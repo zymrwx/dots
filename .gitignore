@@ -114,6 +114,10 @@
 !/.config/qutebrowser/proxy.py.sample
 !/.config/readline/
 !/.config/readline/inputrc
+!/.config/systemd/
+!/.config/systemd/user/
+!/.config/systemd/user/cls.service
+!/.config/systemd/user/cls.timer
 !/.config/task/
 !/.config/task/taskrc
 !/.config/vim/
