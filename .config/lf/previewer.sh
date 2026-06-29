@@ -8,7 +8,8 @@ pager="head -40"
 cache="$HOME/.cache/lf/preview/$(stat --printf '%s%n%Y' "$(readlink -f "$1")" | xxh3sum | cut -d' ' -f1)"
 
 draw_image() {
-    catimg -t -w "$2" "$1"
+    # Double the width because terminal characters are not square
+    catimg -t -c -w "$(($2 * 2))" "$1"
 }
 
 case $(file --mime-type -Lb "$1") in
