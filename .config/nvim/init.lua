@@ -17,6 +17,7 @@ vim.cmd("match ExtraSpace /\\s\\+$/")
 
 vim.cmd("colorscheme vim")
 vim.opt.background = "dark"
+vim.opt.termguicolors = false
 vim.opt.laststatus = 2
 
 -- Clipboard
