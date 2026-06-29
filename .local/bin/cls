@@ -7,7 +7,7 @@ cls_home="$HOME/.local/app/cls"
 config="$cls_home/config"
 url="$cls_home/url"
 exe_prefix="$cls_home/$cls"
-update_interval="86400"
+update_interval="43200"
 log="$XDG_RUNTIME_DIR/cls.log"
 
 # Choose the neweset version
