@@ -60,7 +60,7 @@ add_base() {
         rsync
         stow
         tree
-        ufw
+        firewalld
         udisks2
         pass
     "
