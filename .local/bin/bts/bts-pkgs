@@ -117,6 +117,7 @@ add_audio() {
     pkg="
         $pkg
         pipewire
+        pipewire-pulse
         pipewire-jack
         wiremix
     "
