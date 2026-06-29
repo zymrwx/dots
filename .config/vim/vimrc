@@ -1,4 +1,4 @@
-source ${HOME}/.config/vim/autocmds/*
+source ${HOME}/.config/vim/autocmds.vim
 
 set viminfofile=~/.cache/vim/viminfo
 

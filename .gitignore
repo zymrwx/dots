@@ -117,8 +117,7 @@
 !/.config/task/
 !/.config/task/taskrc
 !/.config/vim/
-!/.config/vim/autocmds/
-!/.config/vim/autocmds/dvtm.vim
+!/.config/vim/autocmds.vim
 !/.config/vim/vimrc
 !/.config/wget/
 !/.config/wget/wgetrc
