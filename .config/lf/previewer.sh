@@ -35,6 +35,18 @@ case $(file --mime-type -Lb "$1") in
     audio/*)
         mid3v2 -l "$1"
         ;;
+    application/x-tar|application/gzip|application/x-bzip2|application/x-xz|application/zstd)
+        tar -tf "$1"
+        ;;
+    application/zip)
+        unzip -l "$1"
+        ;;
+    application/x-rar)
+        unrar-free l "$1"
+        ;;
+    application/x-7z-compressed)
+        7z l "$1"
+        ;;
     *)
         $pager "$1"
         ;;
