@@ -13,7 +13,7 @@ rec="$rec_dir/$rec"
 
 usage() {
     cat <<EOF
-USAGE:  ${0##/*} [OPTION]
+USAGE:  ${0##*/} [OPTION]
 
 Record screen in $fps fps and $format format.
 
