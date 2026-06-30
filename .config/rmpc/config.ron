@@ -46,6 +46,7 @@
             "c":          ToggleConsume,
             "s":          ToggleSingle,
             "p":          TogglePause,
+            "S":          Stop,
             "<C-n>":      NextTrack,
             "<C-p>":      PreviousTrack,
             "f":          SeekForward,
