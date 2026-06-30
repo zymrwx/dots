@@ -34,6 +34,9 @@ case $(file --mime-type -Lb "$1") in
         ;;
     audio/*)
         mid3v2 -l "$1"
+        [ -f "${cache}.png" ] ||
+            ffmpeg -i "$1" -an -c:v copy "${cache}.png"
+        draw_image "${cache}.png" "$(($2 / 2))"
         ;;
     application/x-tar|application/gzip|application/x-bzip2|application/x-xz|application/zstd)
         tar -tf "$1"
