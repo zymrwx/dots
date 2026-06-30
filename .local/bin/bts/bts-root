@@ -1,0 +1,73 @@
+#!/bin/sh
+
+sudo sh <<'EOF'
+
+cat >/root/.bash_profile <<'BASHPROFILE'
+[ -f ~/.bashrc ] && . ~/.bashrc
+
+export HISTIGNORE="cd:cd -:cd ..:pwd:ls:exit"
+export HISTCONTROL=ignoreboth
+
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
+
+export EDITOR=vim
+BASHPROFILE
+
+
+cat >/root/.bashrc <<'BASHRC'
+[[ $- != *i* ]] && return
+
+set -o vi
+
+alias rm="rm -I"
+alias cp="cp -i"
+alias mv="mv -i"
+
+PS1='\[\033[97;101m\]\u@\h\[\033[00m\] \W \$ '
+BASHRC
+
+cat >/root/.inputrc <<'INPUTRC'
+$include /etc/inputrc
+
+set show-mode-in-prompt on
+
+$if term=linux
+	set vi-ins-mode-string \1\e[?0c\2
+	set vi-cmd-mode-string \1\e[?8c\2
+$else
+	set vi-ins-mode-string \1\e[6 q\2
+	set vi-cmd-mode-string \1\e[2 q\2
+$endif
+
+"\t": menu-complete
+Control-n: menu-complete
+Control-p: menu-complete-backward
+
+set show-all-if-ambiguous on
+set show-all-if-unmodified on
+
+set visible-stats On
+set mark-symlinked-directories On
+set colored-stats on
+set colored-completion-prefix On
+set menu-complete-display-prefix On
+INPUTRC
+
+cat >/root/.vimrc <<'VIMRC'
+set number
+set relativenumber
+set expandtab
+set tabstop=4
+set shiftwidth=4
+set smartindent
+set ignorecase
+set smartcase
+syntax on
+set hlsearch
+colorscheme default
+set background=dark
+set laststatus=2
+autocmd VimEnter * highlight StatusLine ctermbg=white ctermfg=red
+VIMRC
+EOF
