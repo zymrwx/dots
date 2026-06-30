@@ -114,6 +114,10 @@
 !/.config/qutebrowser/proxy.py.sample
 !/.config/readline/
 !/.config/readline/inputrc
+!/.config/rmpc/
+!/.config/rmpc/themes/
+!/.config/rmpc/themes/mono.ron
+!/.config/rmpc/config.ron
 !/.config/systemd/
 !/.config/systemd/user/
 !/.config/systemd/user/cls.service
