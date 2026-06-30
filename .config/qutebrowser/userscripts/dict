@@ -3,7 +3,7 @@
 
 tmp=${XDG_RUNTIME_DIR}/qutebrowser/qutedict
 
-terminal="st -T _floating_"
+terminal="st -c _floating_ -t Userscripts/dict"
 
 dict $QUTE_SELECTED_TEXT > "$tmp" 2>&1
 
