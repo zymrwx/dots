@@ -109,7 +109,7 @@
                     direction: Horizontal,
                     panes: [
                         (
-                            size: "35",
+                            size: "30%",
                             borders: "LEFT | TOP | BOTTOM",
                             border_symbols: Inherited(parent: Rounded, bottom_left: "├"),
                             pane: Component("header_left")
@@ -121,7 +121,7 @@
                             pane: Component("header_center")
                         ),
                         (
-                            size: "35",
+                            size: "30%",
                             borders: "RIGHT | TOP | BOTTOM",
                             border_symbols: Inherited(parent: Rounded, bottom_right: "┤"),
                             pane: Component("header_right")
