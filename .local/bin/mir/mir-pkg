@@ -1,16 +1,26 @@
 #!/bin/sh
 # Mirror local pacman caches via http
 
+zones="\
+    home \
+    trusted \
+    libvirt
+"
+
+port="8080"
+
 cache_dir="/var/cache/pacman/pkg"
-ip_addr="$1"
 
 cleanup() {
-    ufw delete allow from 192.168.0.0/16 to any port 8080
+    echo "Closing firewall ports"
+    for i in $zones; do
+        firewall-cmd --remove-port="$port/tcp" --zone="$i" 2>/dev/null
+    done
 }
 
 if [ ! "$UID" -eq 0 ]; then
     cat << EOF
-You must run this script as root:
+You must run this script as root with the absolute path:
 
 sudo $0
 EOF
@@ -20,13 +30,19 @@ fi
 trap cleanup EXIT INT TERM HUP QUIT
 
 cat <<EOF
-On another 's /etc/pacman.d/mirrorlist add on top:
+Firewall ports are only opened on the these zones:
 
-# IP of this host
-CacheServer = http://192.168.x.x:8080
+    $zones
+
+On other machines, add to /etc/pacman.d/mirrorlist on top:
+
+    CacheServer = http://<host-ip>:$port
 
 EOF
 
-ufw allow from 192.168.0.0/16 to any port 8080
+echo "Opening firewall ports"
+for i in $zones; do
+    firewall-cmd --add-port="$port/tcp" --zone="$i"
+done
 
-python -m http.server -d "$cache_dir" 8080
+python -m http.server -d "$cache_dir" "$port"
