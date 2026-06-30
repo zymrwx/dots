@@ -1,3 +1,6 @@
+require('config/autocmds')
+require('plugins/init')
+
 vim.opt.number = true
 vim.opt.relativenumber = true
 
@@ -19,6 +22,3 @@ vim.opt.laststatus = 2
 
 -- Clipboard
 vim.opt.clipboard = "unnamedplus"
-
-require('config/autocmds')
-require('plugins/init')
