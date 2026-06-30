@@ -34,7 +34,7 @@ case $(file --mime-type -Lb "$1") in
         [ -f "${cache}" ] ||
             # pdftoppm already adds .jpg extension
             pdftoppm -f 1 -l 1 -singlefile -jpeg "$1" "${cache}"
-            draw_image "${cache}" "$2" "$3"
+        draw_image "${cache}.jpg" "$2" "$3"
         ;;
     audio/*)
         mid3v2 -l "$1"
