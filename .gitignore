@@ -44,8 +44,6 @@
 !/.config/bash/completions/*
 !/.config/bash/functions/
 !/.config/bash/functions/*
-!/.config/cmus/
-!/.config/cmus/rc
 !/.config/Code - OSS/
 !/.config/Code - OSS/User/
 !/.config/Code - OSS/User/keybindings.json
@@ -73,6 +71,8 @@
 !/.config/lf/ruler.go
 !/.config/libvirt/
 !/.config/libvirt/libvirt.conf
+!/.config/mpd/
+!/.config/mpd/mpd.conf
 !/.config/mpv/
 !/.config/mpv/scripts/
 !/.config/mpv/scripts/mpv-cut/

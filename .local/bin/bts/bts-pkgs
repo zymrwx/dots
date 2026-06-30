@@ -80,7 +80,9 @@ add_extra() {
         gnome-epub-thumbnailer
         imagemagick
         mediainfo
-        cmus
+        mpd
+        mpc
+        rmpc
         odt2txt
         perl-image-exiftool
         poppler
