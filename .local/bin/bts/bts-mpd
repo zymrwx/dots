@@ -1,0 +1,8 @@
+#!/bin/sh
+
+mkdir -p "$HOME/mus" \
+    "$HOME/.mus/playlist" \
+    "$XDG_CACHE_HOME/mpd/
+    "$XDG_RUNTIME_DIR/mpd/
+
+systemctl --user enable --now mpd.socket
