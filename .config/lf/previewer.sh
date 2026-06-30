@@ -8,8 +8,12 @@ pager="head -40"
 cache="$HOME/.cache/lf/preview/$(stat --printf '%s%n%Y' "$(readlink -f "$1")" | xxh3sum | cut -d' ' -f1)"
 
 draw_image() {
-    # Double the width because terminal characters are not square
-    catimg -t -c -w "$(($2 * 2))" "$1"
+    if [ "$3" -gt "$2" ]; then
+        # Multiply the width because terminal characters are not square
+        catimg -t -c -w "$(($2 * 2))" "$1"
+    else
+        catimg -t -c -w "$(($3 * 3))" "$1"
+    fi
 }
 
 case $(file --mime-type -Lb "$1") in
@@ -30,13 +34,13 @@ case $(file --mime-type -Lb "$1") in
         [ -f "${cache}" ] ||
             # pdftoppm already adds .jpg extension
             pdftoppm -f 1 -l 1 -singlefile -jpeg "$1" "${cache}"
-        draw_image "${cache}" "$2" "$3"
+            draw_image "${cache}" "$2" "$3"
         ;;
     audio/*)
         mid3v2 -l "$1"
         [ -f "${cache}.png" ] ||
             ffmpeg -i "$1" -an -c:v copy "${cache}.png"
-        draw_image "${cache}.png" "$(($2 / 2))"
+        draw_image "${cache}.png" "$2" "$3"
         ;;
     application/x-tar|application/gzip|application/x-bzip2|application/x-xz|application/zstd)
         tar -tf "$1"
