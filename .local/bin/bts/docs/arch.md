@@ -9,6 +9,14 @@ Boot into UEFI:
 
 then boot into archiso
 
+> ![NOTE] virt-manager
+> - Install `qemu-desktop` for UEFI (systemd-boot) and secure boot (sbctl)
+> - Check `Customize configuration before install`
+>   + `Overview` > `Hypervisor Details` > `Firmware` >
+>     `UEFI x86_64: /usr/share/edk2/x64/OVMF_CODE.secboot*`
+> - Boot into UEFI after finishing archiso with `systemctl reboot --firmware-setup`
+>   + Go to `Device Manager` > `Secure boot Configuration` > `Custom mode`
+
 ## network
 ```sh
 # read manual
@@ -266,6 +274,9 @@ sudo sbctl verify
 ```
 reboot into UEFI again, secure boot should be in `User` mode, enable secure
 boot if it is not automatically enabled.
+
+> ![NOTE] virt-manager
+> Secure boot should have been automatically enabled
 
 ## network
 ```sh
