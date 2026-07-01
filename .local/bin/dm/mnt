@@ -21,7 +21,11 @@ EOF
 }
 
 sel_dev() {
-    sel=$(printf '%s' "$blk_list" | dmenu -l 9)
+    if [ -n "$DISPLAY" ]; then
+        sel=$(printf '%s' "$blk_list" | dmenu -l 9)
+    else
+        sel=$(printf '%s' "$blk_list" | fzf)
+    fi
 
     part="$(echo "$sel" | awk '{print $1}')"
 
@@ -33,9 +37,13 @@ lock() {
 }
 
 unlock() {
-    pass="$(dmenu -P -p "passphrase: " </dev/null)"
+    if [ -n "$DISPLAY" ]; then
+        pass="$(dmenu -P -p "passphrase: " </dev/null)"
+        udisksctl unlock -b "$part" --key-file <(echo -n "$pass")
+    else
+        udisksctl unlock -b "$part"
+    fi
 
-    udisksctl unlock -b "$part" --key-file <(echo -n "$pass")
 }
 
 mount() {
