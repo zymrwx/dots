@@ -1,14 +1,46 @@
 #!/bin/sh
 # Change network connection's zone
 
-[ -n "$DISPLAY" ] && menu="dmenu -l 9" || menu="fzf"
+usage() {
+    cat <<EOF
+USAGE: ${0##*/} [OPTION]
 
+    Print active zones without arguments
 
-uuid="$(nmcli connection show | tail -n +2 | $menu | awk '{print $2}')"
-[ -z "$uuid" ] && exit 1
+OPTIONS:
 
-zone="$(firewall-cmd --get-zones | tr ' ' '\n' | $menu)"
-[ -z "$zone" ] && exit 1
+-h
+    print this help message
+-s
+    set a connection's zone
+EOF
+    exit 0
+}
 
-nmcli connection modify "$uuid" connection.zone "$zone"
-firewall-cmd --get-active-zones
+get_zone() {
+    zone="$(firewall-cmd --get-active-zones)"
+    printf '%s\n' "$zone"
+
+    if [ -n "$DISPLAY" ]; then
+        notify-send "${0##*/}" "$zone"
+    fi
+}
+
+set_zone() {
+    [ -n "$DISPLAY" ] && menu="dmenu -l 9" || menu="fzf"
+    uuid="$(nmcli connection show | tail -n +2 | $menu | awk '{print $2}')"
+    [ -z "$uuid" ] && exit 1
+    zone="$(firewall-cmd --get-zones | tr ' ' '\n' | $menu)"
+    [ -z "$zone" ] && exit 1
+    nmcli connection modify "$uuid" connection.zone "$zone"
+    firewall-cmd --get-active-zones
+}
+
+if [ -z "$1" ]; then
+    get_zone
+else
+    case "$1" in
+        -s) set_zone ;;
+        *) usage ;;
+    esac
+fi
