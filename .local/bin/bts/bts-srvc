@@ -8,8 +8,8 @@ sudo sh <<'EOF'
     systemctl enable --now systemd-timesyncd.service
     systemctl enable --now paccache.timer
 
-    systemctl enable --now firewalld.timer
-    firewall-cmd --permanent --add-service=ssh
+    systemctl enable --now firewalld.service
+    firewall-cmd --permanent --remove-service=ssh --zone="public"
     firewall-cmd --reload
 
     systemctl enable --now tlp.service
