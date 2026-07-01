@@ -25,7 +25,7 @@ export XDG_STATE_HOME="$HOME/.local/state"
 
 # Unclutter $HOME
 [ -d "$XDG_STATE_HOME/bash" ] || mkdir -p "$XDG_STATE_HOME/bash"
-export HISTFILE="$XDG_STATE_HOME/bash/history"
+export HISTFILE="$XDG_STATE_HOME/bash/history" && touch $HISTFILE
 export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc"
 export XAUTHORITY="$XDG_RUNTIME_DIR/Xauthority"
 export PASSWORD_STORE_DIR="$HOME/doc/.gpg/pass"
