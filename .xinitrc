@@ -8,6 +8,8 @@ export QT_QPA_PLATFORMTHEME="qt5ct"
 export QT_STYLE_OVERRIDE="Adwaita-dark"
 export GTK_THEME="Adwaita-dark"
 
+unset LF_LEVEL
+
 for i in $(xinput list | grep -i "touchpad" | grep -oP 'id=\K[0-9]+'); do
     xinput set-prop "$i" "libinput Tapping Enabled" 1
 done
