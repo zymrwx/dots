@@ -1,0 +1,11 @@
+#!/bin/sh
+# Change network connection's zone
+
+uuid="$(nmcli connection show | tail -n +2 | dmenu -l 9 | awk '{print $2}')"
+[ -z "$uuid" ] && exit 1
+
+zone="$(firewall-cmd --get-zones | tr ' ' '\n' | dmenu -l 9)"
+[ -z "$zone" ] && exit 1
+
+nmcli connection modify "$uuid" connection.zone "$zone"
+firewall-cmd --get-active-zones
