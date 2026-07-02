@@ -162,6 +162,7 @@ add_xorg() {
         xorg-xkill
         xsel
         xss-lock
+        xdo
     "
 }
 
