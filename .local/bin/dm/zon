@@ -27,7 +27,7 @@ get_zone() {
 }
 
 set_zone() {
-    [ -n "$DISPLAY" ] && menu="dmenu -l 9" || menu="fzf"
+    [ -n "$DISPLAY" ] && menu="dmenu -l 9 -w "$(xdo id)"" || menu="fzf"
     uuid="$(nmcli connection show | tail -n +2 | $menu | awk '{print $2}')"
     [ -z "$uuid" ] && exit 1
     zone="$(firewall-cmd --get-zones | tr ' ' '\n' | $menu)"
