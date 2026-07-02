@@ -33,13 +33,22 @@ EOF
 }
 
 sel_output() {
-    output="$(xrandr | grep ' connected ' | dmenu -p "output" -l 3)"
+    output="$(
+        xrandr |
+        grep ' connected ' |
+        dmenu -p "output" -l 3 -w "$(xdo id)"
+    )"
     output="${output#*primary }"
     output="${output%% *}"
 }
 
 sel_speaker() {
-    speaker="$(pw-dump | grep '"node.name": ' | sort | dmenu -p "speaker" -l 3)"
+    speaker="$(
+        pw-dump |
+        grep '"node.name": ' |
+        sort |
+        dmenu -p "speaker" -l 3 -w "$(xdo id)"
+    )"
     speaker="${speaker#*node.name\": \"}"
     speaker="${speaker%\",*}"
 }
