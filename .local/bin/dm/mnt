@@ -7,24 +7,26 @@ blk_list="$(lsblk -rpo 'name,type,size,uuid,label,mountpoint,fstype' \
 
 usage() {
     cat <<EOF
-USAGE:  ${0##*/} OPTION
+USAGE:  ${0##*/} [OPTION]
+
+    mount device, also unlock for LUKS container
 
 OPTIONS:
 
--m
-    mount device, also unlock for LUKS container
-
 -u
     unmount device, also lock for LUKS container
+
+-h
+    print this help message
 EOF
     exit 0
 }
 
 sel_dev() {
     if [ -n "$DISPLAY" ]; then
-        sel=$(printf '%s' "$blk_list" | dmenu -l 9)
+        sel="$(printf '%s' "$blk_list" | dmenu -l 9 -w "$(xdo id)")"
     else
-        sel=$(printf '%s' "$blk_list" | fzf)
+        sel="$(printf '%s' "$blk_list" | fzf)"
     fi
 
     part="$(echo "$sel" | awk '{print $1}')"
@@ -38,7 +40,7 @@ lock() {
 
 unlock() {
     if [ -n "$DISPLAY" ]; then
-        pass="$(dmenu -P -p "passphrase: " </dev/null)"
+        pass="$(dmenu -P -p "passphrase: " </dev/null -w "$(xdo id)")"
         udisksctl unlock -b "$part" --key-file <(echo -n "$pass")
     else
         udisksctl unlock -b "$part"
@@ -63,12 +65,10 @@ unmount() {
 }
 
 if [ -z "$1" ]; then
-    usage
+    sel_dev; mount
 else
-    sel_dev
     case "$1" in
-        -m) mount ;;
-        -u) unmount ;;
+        -u) sel_dev; unmount ;;
         *)  usage ;;
     esac
 fi
