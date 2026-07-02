@@ -33,18 +33,21 @@ case "$1" in
         usage
         ;;
     -e)
-        choice="$(ls $address_dir | dmenu -i)" &&
+        choice="$(ls $address_dir | dmenu -i -w "$(xdo id)")" &&
             $EDITOR "$address_dir/$choice"
         ;;
     *)
         # Lines starting with `#` and empty lines are ignored
-        choice="$(grep -hv '^\s*\(#.*\)\?$' "$address_dir"/*  | dmenu -i -l 9)"
-        
+        choice="$(
+            grep -hv '^\s*\(#.*\)\?$' "$address_dir"/*  |
+                dmenu -i -l 9 -w "$(xdo id)"
+        )"
+
         # Trim everything before the first `|` if existing
         choice="${choice#*|}"
         # Trim leading space is exiting
         choice="${choice# }"
-        
+
         printf '%s' "$choice" | xsel -ib
         ;;
 esac
