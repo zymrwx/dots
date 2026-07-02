@@ -33,3 +33,8 @@ export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
 
 # Autostart
 command -v cls > /dev/null && cls -d > /dev/null 2>&1
+
+[ "$(tty)" = "/dev/tty1" ] &&
+    ! pidof -s Xorg >/dev/null &&
+    command -v startx >/dev/null &&
+    exec startx
