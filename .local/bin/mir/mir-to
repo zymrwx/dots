@@ -29,7 +29,12 @@ sync_cmd() {
     opt="$1"
     rsync "$opt" -av --delete-after --progress --delete-after \
         --exclude="doc/dots/.config/fcitx/dbus/" \
+        --exclude="doc/dots/.config/fcitx5/conf/cached_layouts" \
+        --exclude="doc/dots/.config/fcitx5/conf/notifications.conf" \
+        --exclude="doc/dots/.config/fcitx5/conf/pinyin.conf" \
+        --exclude="doc/dots/.config/fcitx5/conf/punctuation.conf" \
         --exclude="doc/dots/.config/ibus/" \
+        --exclude="doc/dots/.ssh/agent/" \
         $source $target
 }
 
