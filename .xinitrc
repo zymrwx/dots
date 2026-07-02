@@ -17,10 +17,8 @@ done
 xset r rate 200 30
 
 xset s on
-
-xset s 960
-
-xss-lock -- slock &
+xset s 540 60
+xss-lock -n dim -- slock &
 
 echo 'Xft.dpi: 96' | xrdb -m
 

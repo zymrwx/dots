@@ -1,0 +1,10 @@
+#!/bin/sh
+
+trap "brightnessctl -r; kill %%" EXIT
+
+brightnessctl -s
+
+brightnessctl set 1%
+
+sleep 2147483647 &
+wait
