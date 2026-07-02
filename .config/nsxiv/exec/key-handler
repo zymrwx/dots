@@ -1,7 +1,7 @@
 #!/bin/sh
 
 delete() {
-    choice="$(printf "no\nyes" | dmenu -p "rm?")" &&
+    choice="$(printf "no\nyes" | dmenu -p "rm?" -w "$(xdo id)")" &&
         [ "$choice" = "yes" ] && rm "$file"
 }
 
@@ -10,7 +10,7 @@ show_exif() {
 }
 
 rename_img() {
-    new_name="$(dmenu -p "rename: ")"
+    new_name="$(dmenu -p "rename: " -w "$(xdo id)")"
     dir_name="${file%/*}"
     new_path="$dir_name/$new_name"
 
@@ -18,7 +18,8 @@ rename_img() {
         [ -e "$new_path" ] &&
         [ "$new_path" != "$file" ];
     then
-        choice="$(printf "no\nyes" | dmenu -p "overwrite?")" || return 1
+        choice="$(printf "no\nyes" | dmenu -p "overwrite?" -w "$(xdo id)")" ||
+            return 1
         [ "$choice" != "yes" ] && return 1
     fi
 
