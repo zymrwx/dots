@@ -1,0 +1,34 @@
+#!/bin/sh
+
+export GTK_IM_MODULE="fcitx"
+export XMODIFIERS="@im=fcitx"
+export QT_IM_MODULE="fcitx"
+export QT_QPA_PLATFORMTHEME="qt5ct"
+export QT_STYLE_OVERRIDE="Adwaita-dark"
+export GTK_THEME="Adwaita-dark"
+export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/gtkrc"
+
+systemctl --user import-environment DISPLAY XAUTHORITY
+command -v dbus-update-activation-environment >/dev/null 2>&1 &&
+    dbus-update-activation-environment DISPLAY XAUTHORITY
+
+unset LF_LEVEL
+
+xset r rate 200 30
+xset s on
+xset s 960
+echo 'Xft.dpi: 96' | xrdb -m
+xrandr -s 1920x1080
+redshift -P -O 5000
+hsetroot -solid '#111111'
+
+xss-lock -- slock &
+dunst &
+picom &
+clipmenud &
+fcitx5 -d &
+dwmblocks &
+
+exec ssh-agent dwm
+
+cleanup

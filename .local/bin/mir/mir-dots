@@ -1,0 +1,13 @@
+#!/bin/sh
+# Mirror dots/ only with files whitelisted in gitignore
+
+origin="$HOME/doc/dots"
+remote="$HOME/doc/git/zym/dots"
+
+if [ ! -d "$remote" ]; then
+    git clone "$origin" "$remote"
+fi
+
+git -C "$remote" fetch --all --prune
+git -C "$remote" reset --hard origin/zym
+git -C "$remote" clean -fd

@@ -1,0 +1,16 @@
+#!/bin/sh
+# Speaker switcher
+
+[ -n "$DISPLAY" ] && menu="dmenu -i -l 5 -p" || menu="fzf --prompt"
+
+sink="$(
+    wpctl list audio sinks 2>/dev/null |
+    sed 's/\t/\ \ /g' |
+    $menu "${0##*/}"
+)"
+[ -z "$sink" ] && exit 0
+
+id="${sink%% *}"
+wpctl set-default "$id" 2>/dev/null
+
+pkill -RTMIN+2 dwmblocks

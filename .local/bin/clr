@@ -1,0 +1,52 @@
+#!/bin/sh
+# Print 16 terminal colors
+
+W=6
+
+# Numbers row 1
+i=0
+while [ $i -lt 8 ]; do
+    printf "%${W}d " $i
+    i=$((i + 1))
+done
+echo
+
+# ANSI codes row 1
+i=0
+while [ $i -lt 8 ]; do
+    printf "\033[1;37m\033[3${i}m%${W}s\033[0m " "\e[3${i}m"
+    i=$((i + 1))
+done
+echo
+
+# Color blocks row 1
+i=0
+while [ $i -lt 8 ]; do
+    printf "\033[48;5;${i}m%${W}s\033[0m " ""
+    i=$((i + 1))
+done
+echo
+
+# Color blocks row 2
+i=8
+while [ $i -lt 16 ]; do
+    printf "\033[48;5;${i}m%${W}s\033[0m " ""
+    i=$((i + 1))
+done
+echo
+
+# ANSI codes row 2
+i=8
+while [ $i -lt 16 ]; do
+    printf "\033[1;37m\033[9$((i - 8))m%${W}s\033[0m " "\e[9$((i - 8))m"
+    i=$((i + 1))
+done
+echo
+
+# Numbers row 2
+i=8
+while [ $i -lt 16 ]; do
+    printf "%${W}d " $i
+    i=$((i + 1))
+done
+echo

@@ -1,0 +1,45 @@
+source '~/.config/lf/bindings.lf'
+source '~/.config/lf/opener.lf'
+
+set cleaner "~/.config/lf/cleaner.sh"
+set dircounts true
+set dirfirst true
+set drawbox
+set borderfmt "\033[90m"
+set filtermethod regex
+set ifs "\n"
+set info custom:size:time
+set infotimefmtnew "2006-01-02 15:04"
+set infotimefmtold "2006-01-02 15:04"
+set mergeindicators true
+set numberfmt "\033[90m"
+set number true
+set previewer "~/.config/lf/preview.sh"
+set preview true
+set ratios 1:1
+set relativenumber true
+set shell "/bin/sh"
+set shellopts "-eu"
+set timefmt "2006-01-02 15:04"
+set watch true
+
+set promptfmt "\033[30;47m%u@%h\033[00m %d%f"
+cmd on-cd &{{
+    bash -c '
+    git_prompt="/usr/share/git/completion/git-prompt.sh"
+    [ -f "$git_prompt" ] && . "$git_prompt"
+
+    GIT_PS1_SHOWDIRTYSTATE=1
+    GIT_PS1_SHOWSTASHSTATE=1
+    GIT_PS1_SHOWUNTRACKEDFILES=1
+    GIT_PS1_SHOWUPSTREAM=1
+    GIT_PS1_DESCRIBE_STYLE=1
+    GIT_PS1_SHOWCOLORHINTS=1
+
+    fmt="\033[30;47m%u@%h\033[00m %d%f$(__git_ps1 " %s")"
+    lf -remote "send $id set promptfmt \"$fmt\""
+    '
+}}
+cmd on-init &{{
+    lf -remote "send $id on-cd"
+}}

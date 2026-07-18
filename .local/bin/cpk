@@ -1,0 +1,23 @@
+#!/bin/sh
+# Color picker
+
+notify-send -r 1001 -t 0 "${0##*/}" "Click on the pixel you want to pick"
+
+# wait for click
+xdotool selectwindow 2>/dev/null
+eval $(xdotool getmouselocation --shell)
+
+color=$(import -silent -window root -crop 1x1+${X}+${Y} -depth 8 txt:- 2>/dev/null | \
+        awk 'NR==2 {print $3}' | tr -d 'srgb:')
+
+hex="${color#\#}"
+r=$((0x${hex:0:2}))
+g=$((0x${hex:2:2}))
+b=$((0x${hex:4:2}))
+
+printf "%s" "$color" | xsel -b 2>/dev/null
+
+notify-send -r 1001 \
+    -h string:x-dunst-stack-tag:colorpicker \
+    "${0##*/}" \
+    "<span foreground='${color}'><b>█</b></span> <b>Hex:</b> <tt>${color}</tt>\n<span foreground='${color}'><b>█</b></span> <b>RGB:</b> <i>${r},${g},${b}</i>\n"

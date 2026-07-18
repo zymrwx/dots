@@ -1,0 +1,7 @@
+# vim:ft=bash
+
+lfcd () {
+    cd "$(lfub -print-last-dir "$@")"
+}
+
+bind '"\C-o":"lfcd\C-m"'  # bash

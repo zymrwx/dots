@@ -1,0 +1,44 @@
+#!/bin/sh
+# Monitor switcher
+
+xrandr_output="$(xrandr)"
+
+select_output() {
+    printf '%s' "$xrandr_output" |
+    grep ' connected ' |
+    dmenu -i -l 3 -p "${0##*/}" |
+    cut -d' ' -f1
+}
+
+target="$(select_output)"
+[ -z "$target" ] && exit 0
+
+opt="$(
+    printf "same-as\nright-of\nleft-of\nabove\nbelow\nrotate\noff" |
+    dmenu -i -p "opt"
+)" || exit 0
+
+case "$opt" in
+    off)
+        if printf '%s\n' "$xrandr_output" |
+            grep "$target" |
+            grep -q " connected primary ";
+        then
+            choice=$(printf "no\nyes" | dmenu -i -p "turn off primary output?")
+            [ "$choice" != "yes" ] && exit 0
+        fi
+
+        xrandr --output "$target" --off
+        ;;
+    rotate)
+        dir="$(
+            printf "inverted\nleft\nnormal\nright" |
+            dmenu -i -p "dir"
+        )"
+        xrandr --output "$target" --rotate "$dir"
+        ;;
+    *)
+        primary="$(select_output)"
+        xrandr --output "$target" --"$opt" "$primary" --auto
+        ;;
+esac

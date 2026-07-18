@@ -1,0 +1,73 @@
+# vim:ft=bash
+
+prox() {
+    prox=''
+
+    [ -f "$HOME/.local/share/env/prox.env" ] &&
+        . "$HOME/.local/share/env/prox.env"
+
+    prox_usage() {
+        cat << _EOF_
+USAGE: prox [OPTION]
+    Toggle proxy ENV
+
+OPTIONS:
+-e
+    Export all proxy ENVs
+-u
+    Unset all proxy ENVs
+-p
+    Print all prox ENVs
+-h
+    Print usage
+_EOF_
+    }
+
+    prox_enable() {
+        export http_proxy="$prox"
+        export https_proxy="$prox"
+        export HTTP_PROXY="$http_proxy"
+        export HTTPS_PROXY="$https_proxy"
+
+        prox_print
+    }
+
+    prox_disable() {
+        if [ -n "$http_proxy" ] ||
+            [ -n "$https_proxy" ] ||
+            [ -n "$HTTP_PROXY" ] ||
+            [ -n "$HTTPS_PROXY" ];
+        then
+            unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY
+        fi
+
+        prox_print
+    }
+
+    prox_print() {
+        echo http_proxy="$http_proxy"
+        echo https_proxy="$https_proxy"
+        echo HTTP_PROXY="$HTTP_PROXY"
+        echo HTTPS_PROXY="$HTTPS_PROXY"
+    }
+
+
+    if [ -z "$1" ]; then
+        prox_print
+    else
+        case "$1" in
+            -e)
+                prox_enable
+                ;;
+            -u)
+                prox_disable
+                ;;
+            -p)
+                prox_print
+                ;;
+            -*)
+                prox_usage
+                ;;
+        esac
+    fi
+}

@@ -1,0 +1,60 @@
+#!/bin/sh
+# Mirror files to a local or remote path
+
+usage() {
+    cat <<EOF
+USAGE:  ${0##*/} PATH
+
+Mirror files in $source to a local or remote path
+
+Examples:
+
+    ${0##*/} /data/
+        To a backup directory
+
+    ${0##*/} /run/media/$USER/usb/data/
+        To the subdirectory /data/ in a usb device
+
+    ${0##*/} 192.168.10.1:~
+        To another host under the same uesr's HOME
+
+EOF
+    exit 0
+}
+
+source="$HOME/doc $HOME/mus $HOME/pic $HOME/vid"
+target="$1"
+
+sync_cmd() {
+    opt="$1"
+    rsync "$opt" -av --delete-after --progress \
+        --include="doc/dots/.config/Code - OSS/" \
+        --include="doc/dots/.config/Code - OSS/User/" \
+        --include="doc/dots/.config/Code - OSS/User/keybindings.json" \
+        --include="doc/dots/.config/Code - OSS/User/settings.json" \
+        --include="doc/dots/.config/Code - OSS/User/settings.json.sample" \
+        --exclude="doc/dots/.config/Code - OSS/**" \
+        --exclude="doc/dots/.config/fcitx/dbus/" \
+        --exclude="doc/dots/.config/fcitx5/conf/cached_layouts" \
+        --exclude="doc/dots/.config/fcitx5/conf/notifications.conf" \
+        --exclude="doc/dots/.config/fcitx5/conf/pinyin.conf" \
+        --exclude="doc/dots/.config/fcitx5/conf/punctuation.conf" \
+        --exclude="doc/dots/.config/ibus/" \
+        --exclude="doc/dots/.ssh/agent/" \
+        $source $target
+}
+
+dry_run() {
+    sync_cmd "--dry-run"
+}
+
+run() {
+    sync_cmd "-h"
+}
+
+[ -z "$target" ] && usage
+
+dry_run
+
+read -p "continue syncing?(y/n): " REPLY
+[ "$REPLY" = "y" ] && run

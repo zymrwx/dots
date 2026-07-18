@@ -1,0 +1,43 @@
+#!/bin/sh
+# Print battery capacity in percentage
+
+if [ -d "/sys/class/power_supply/BAT0" ]; then
+    BAT="/sys/class/power_supply/BAT0"
+elif [ -d "/sys/class/power_supply/BAT1" ]; then
+    BAT="/sys/class/power_supply/BAT1"
+else
+    # No battery found, show AC adapter icon
+    icon=""
+    printf '%s\n' "$icon"
+    exit 0
+fi
+
+read -r value < "$BAT/capacity"
+read -r status < "$BAT/status"
+
+case "$status" in
+"Discharging")
+    case "$value" in
+        [0-5])  icon="󰂎";;
+        [6-9])  icon="󰁺";;
+        1[0-9]) icon="󰁻";;
+        2[0-9]) icon="󰁼";;
+        3[0-9]) icon="󰁽";;
+        4[0-9]) icon="󰁽";;
+        5[0-9]) icon="󰁾";;
+        6[0-9]) icon="󰁿";;
+        7[0-9]) icon="󰂀";;
+        8[0-9]) icon="󰂁";;
+        9[0-9]) icon="󰂂";;
+        100)    icon="󰁹";;
+    esac
+    ;;
+"Not charging"|"Full")
+    icon=""
+    ;;
+"Charging")
+    icon=""
+    ;;
+esac
+
+printf '%s %s%%\n' "$icon" "$value"

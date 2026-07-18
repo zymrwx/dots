@@ -1,0 +1,61 @@
+# vim:ft=lf
+
+cmd open &{{
+    # Update file list in the exact sorted order
+    update_list(){
+        [ -d "$XDG_RUNTIME_DIR/lf" ] || mkdir -p "$XDG_RUNTIME_DIR/lf"
+        list="$XDG_RUNTIME_DIR/lf/rifle.list"
+
+        lf -remote "query $id files" > "$list"
+
+        num=$(grep -Fn "$f" "$list" | cut -d: -f1)
+        head=$(tail -n +"$num" "$list")
+        tail=$(head -n $((num - 1)) "$list")
+
+        printf '%s\n%s\n' "$head" "$tail" > "$list"
+    }
+
+    open_image() {
+        update_list
+        cat "$list" | nsxiv -i
+    }
+
+    open_video() {
+        update_list
+        mpv --playlist="$list" \
+            --playlist-start=0 \
+            --loop-playlist
+    }
+
+    open_audio() {
+        update_list
+        st mpv --playlist="$list" \
+               --playlist-start=0 \
+               --loop-playlist
+    }
+
+    open_text() {
+        lf -remote "send $id \$$EDITOR -p \$fx"
+    }
+
+    case $(file --mime-type -Lb "$f") in
+        image/x-xcf)
+            gimp "$f"
+            ;;
+        image/*|font/ttf)
+            open_image
+            ;;
+        audio/*)
+            open_audio
+            ;;
+        video/*)
+            open_video
+            ;;
+        application/pdf|application/epub+zip)
+            zathura "$f"
+            ;;
+        *)
+            open_text
+            ;;
+    esac
+}}

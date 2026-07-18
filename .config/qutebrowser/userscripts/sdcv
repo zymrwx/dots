@@ -1,0 +1,10 @@
+#!/bin/sh
+# Search the currently selected word with sdcv
+
+dict=${XDG_RUNTIME_DIR}/qutebrowser/sdcv
+
+terminal="st -c _floating_ -t Userscripts/sdcv"
+
+sdcv -n -1 $QUTE_SELECTED_TEXT > "$dict"
+
+$terminal less -i "$dict"

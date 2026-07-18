@@ -1,0 +1,45 @@
+#!/bin/sh
+
+sudo sh <<'EOF1'
+user="${SUDO_USER:-$USER}"
+
+systemctl enable --now NetworkManager.service
+systemctl enable --now systemd-boot-update.service
+systemctl enable --now systemd-timesyncd.service
+systemctl enable --now paccache.timer
+
+systemctl enable --now firewalld.service
+firewall-cmd --permanent --remove-service=ssh --zone="public"
+firewall-cmd --reload
+
+systemctl enable --now tlp.service
+[ ! -d /etc/tlp.d ] && mkdir -p /etc/tlp.d
+cat > /etc/tlp.d/99-bat.conf <<EOF2
+START_CHARGE_THRESH_BAT0=75
+STOP_CHARGE_THRESH_BAT0=80
+START_CHARGE_THRESH_BAT1=75
+STOP_CHARGE_THRESH_BAT1=80
+EOF2
+cat > /etc/tlp.d/99-profile.conf <<EOF2
+TLP_AUTO_SWITCH=1
+TLP_PROFILE_AC=BAL
+TLP_PROFILE_BAT=SAV
+TLP_PROFILE_DEFAULT=BAL
+EOF2
+tlp start
+
+systemctl enable --now sshd.service
+[ ! -d /etc/ssh/sshd_config.d ] && mkdir -p /etc/ssh/sshd_config.d
+printf "PasswordAuthentication no\n" >\
+    /etc/ssh/sshd_config.d/99-auth.conf
+
+[ ! -d /etc/systemd/sleep.conf.d ] && mkdir -p /etc/systemd/sleep.conf.d
+printf "[Sleep]\nHibernateMode=shutdown\n" > \
+    /etc/systemd/sleep.conf.d/99-hibernate.conf
+
+[ ! -d /etc/systemd/logind.conf.d ] && mkdir -p /etc/systemd/logind.conf.d
+printf "[Login]\nHandlePowerKey=hibernate\n" > \
+    /etc/systemd/logind.conf.d/99-powerkey.conf
+
+systemctl enable --now autorandr.service
+EOF1

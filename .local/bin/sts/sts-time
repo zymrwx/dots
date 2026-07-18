@@ -1,0 +1,6 @@
+#!/bin/sh
+# Print time and date
+
+value="$(date '+%m-%d %a %H:%M')"
+
+printf '%s\n' "$value"

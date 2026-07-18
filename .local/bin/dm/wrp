@@ -1,0 +1,8 @@
+#!/bin/sh
+# Wrapper script for dmenu scripts
+
+keys="rpt\ntap\nbkr\nzon\nmon\nred\nspk\n"
+
+choice="$(printf '%b' "$keys" | dmenu -i -p "${0##*/}")" || exit 0
+
+exec "$choice"

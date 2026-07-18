@@ -1,0 +1,47 @@
+#!/bin/sh
+# extract files
+
+f="$1"
+
+printf "extract file?(y/n)"
+read choice
+if [ "$choice" = "y" ]; then
+    case "$f" in
+    *.tar)
+        tar xf "$f"
+        ;;
+    *.zip)
+        unzip "$f" -d "$(basename $f | sed -E 's/.zip$//')"
+        ;;
+    *.7z)
+        7z x "$f"
+        ;;
+    *.tar.gz|*.tgz|*.taz)
+        tar xzf "$f"
+        ;;
+    *.gz)
+        gunzip -k "$f"
+        ;;
+    *.tar.bz2|*.tbz2|*.tbz|*.tz2|*.tb2)
+        tar xjf "$f"
+        ;;
+    *.bz2)
+        bzip2 -dk "$f"
+        ;;
+    *.tar.xz|*.txz)
+        tar xJf "$f"
+        ;;
+    *.xz)
+        xz -dk "$f"
+        ;;
+    *.tar.zst|*.tzst)
+        tar xf "$f" --zstd
+        ;;
+    *.zst)
+        zstd -dk "$f"
+        ;;
+    *.rar)
+        unrar-free -x "$f"
+        ;;
+    esac
+fi

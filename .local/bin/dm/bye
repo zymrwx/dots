@@ -1,0 +1,16 @@
+#!/bin/sh
+# Exit dwm
+
+keys="Lock\nSuspend\nHibernate\nReboot\nPoweroff\nQuit"
+
+choice="$(printf '%b' "$keys" | dmenu -i -p "${0##*/}")" ||
+    exit 0
+
+case "$choice" in
+    Lock)       slock ;;
+    Suspend)    systemctl suspend ;;
+    Hibernate)  systemctl hibernate ;;
+    Reboot)     systemctl reboot ;;
+    Poweroff)   systemctl poweroff ;;
+    Quit)       pkill -x dwm ;;
+esac

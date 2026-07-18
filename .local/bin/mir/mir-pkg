@@ -1,0 +1,41 @@
+#!/bin/sh
+# Mirror local pacman caches via http
+
+sudo sh <<'EOF1'
+zones="\
+    home \
+    trusted \
+    libvirt
+"
+
+port="8080"
+
+cache_dir="/var/cache/pacman/pkg"
+
+cleanup() {
+    echo "Closing firewall ports"
+    for i in $zones; do
+        firewall-cmd --remove-port="$port/tcp" --zone="$i" 2>/dev/null
+    done
+}
+
+trap cleanup EXIT INT TERM HUP QUIT
+
+cat <<EOF2
+Firewall ports are only opened on the these zones:
+
+    $zones
+
+On other machines, add to /etc/pacman.d/mirrorlist on top:
+
+    CacheServer = http://<host-ip>:$port
+
+EOF2
+
+echo "Opening firewall ports"
+for i in $zones; do
+    firewall-cmd --add-port="$port/tcp" --zone="$i"
+done
+
+python -m http.server -d "$cache_dir" "$port"
+EOF1

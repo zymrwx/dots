@@ -1,0 +1,10 @@
+#!/bin/sh
+# Display the QRCode of current URL
+
+qrcode=${XDG_RUNTIME_DIR}/qutebrowser/qute-code.png
+
+viewer="nsxiv -N _floating_ --no-bar --private"
+
+qrtool encode "$QUTE_URL" > $qrcode
+
+$viewer $qrcode

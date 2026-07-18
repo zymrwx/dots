@@ -1,0 +1,21 @@
+#!/bin/sh
+# Print CPU temperate
+
+for i in /sys/class/thermal/thermal_zone*/; do
+    if [ -d "$i" ]; then
+        read -r value < "${i}temp" 2>/dev/null
+        # Some devices have negtive temperature for some thermal zones
+        [ "$value" -ge 0 ] 2>/dev/null && break
+    fi
+done
+
+if [ -z "$value" ]; then
+    icon="󱔱"
+    printf '%s\n' "$icon"
+else
+# $ cat /sys/class/thermal/thermal_zone0/temp
+# 38000
+    icon=""
+    value="$((value / 1000))"
+    printf '%s %s℃\n' "$icon" "$value"
+fi

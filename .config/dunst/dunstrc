@@ -1,0 +1,7 @@
+# vim:ft=conf
+
+[global]
+    follow = keyboard
+    font = SourceCodePro 13
+    frame_color = "#aaaaaa"
+    highlight = "#aaaaaa"

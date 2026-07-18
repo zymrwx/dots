@@ -1,0 +1,23 @@
+#!/bin/sh
+# Change microphone volume
+
+case "$1" in
+    -t)
+        wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle 2>/dev/null
+        ;;
+    *)
+        wpctl set-volume @DEFAULT_AUDIO_SOURCE@ "$1" 2>/dev/null
+        ;;
+esac
+
+value="$(
+    wpctl get-volume @DEFAULT_AUDIO_SOURCE@ |
+    awk '{
+        vol=$2*100
+        printf "%.0f%%", vol
+        if($NF=="[MUTED]") printf " [MUTED]"
+    }'
+)"
+
+pkill -RTMIN+10 dwmblocks
+notify-send -u low -h int:value:"${value%%%*}" -t 3000 -r 1004 "${0##*/} $value"

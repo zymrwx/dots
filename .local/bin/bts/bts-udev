@@ -1,0 +1,9 @@
+#!/bin/sh
+
+sudo sh <<'EOF'
+
+cat >/etc/udev/rules.d/dwmblocks-bat.rules <<'DWMBLOCKSBAT'
+ACTION=="change", SUBSYSTEM=="power_supply", RUN+="/usr/bin/pkill -RTMIN+1 dwmblocks"
+DWMBLOCKSBAT
+
+EOF

@@ -1,0 +1,35 @@
+#!/bin/sh
+# Bulk rename files in CWD
+
+old="$(mktemp)"
+new="$(mktemp)"
+
+if [ -n "$fs" ]; then
+    printf '%s\n' "$fs" | while IFS= read -r file; do
+        basename "$file"
+    done > "$old"
+else
+    ls > "$old"
+fi
+
+cp "$old" "$new"
+"${EDITOR:-vi}" "$new"
+
+if [ "$(wc -l < "$new")" -ne "$(wc -l < "$old")" ]; then
+    echo "Error: Line count mismatch!" >&2
+    rm -f "$old" "$new"
+    exit 1
+fi
+
+exec 3<"$old"
+exec 4<"$new"
+
+while IFS= read -r oldname <&3 && IFS= read -r newname <&4; do
+    if [ "$oldname" = "$newname" ] || [ -e "$newname" ]; then
+        continue
+    fi
+    mv -- "$oldname" "$newname"
+done
+
+exec 3<&- 4<&-
+rm -f "$old" "$new"

@@ -1,0 +1,16 @@
+#!/bin/sh
+# Redshift switcher
+
+opt="$(printf "reset\noff\non" | dmenu -p "${0##*/}" -i)"
+
+case "$opt" in
+    reset)
+        redshift -x && redshift -O 5000
+        ;;
+    off)
+        redshift -x
+        ;;
+    on)
+        redshift -O 5000
+        ;;
+esac

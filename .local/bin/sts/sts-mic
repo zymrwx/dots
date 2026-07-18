@@ -1,0 +1,27 @@
+#!/bin/sh
+# Print speaker volume in percentage
+
+# $ wpctl get-volume @DEFAULT_AUDIO_SOURCE@
+# Volume: 0.75 [MUTED]
+volume="$(wpctl get-volume @DEFAULT_AUDIO_SOURCE@ 2> /dev/null)"
+volume="${volume#Volume: }"
+
+case "$volume" in
+    *\[MUTED\]*)
+        icon=""
+        ;;
+    *)
+        icon=""
+        ;;
+esac
+
+value="${volume% \[MUTED\]}"
+
+# Convert decimal to percentage:
+# 0.75 → 075 → 75,  0.05 → 005 → 5,  1.00 → 100
+int="${value%.*}"
+frac="${value#*.}"
+value="${int}${frac}"
+value=$((10#$value))
+
+printf '%s %s%%\n' "$icon" "$value"

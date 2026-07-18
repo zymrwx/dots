@@ -1,0 +1,91 @@
+#!/bin/sh
+
+delete() {
+    choice="$(printf "no\nyes" | dmenu -p "rm?" -w "$(xdotool getactivewindow)")" &&
+        [ "$choice" = "yes" ] && rm "$file"
+}
+
+show_exif() {
+    st -t _floating_ sh -c "exiftool \"$file\"  | less -R"
+}
+
+rename_img() {
+    new_name="$(dmenu -p "rename: " -w "$(xdotool getactivewindow)")"
+    dir_name="${file%/*}"
+    new_path="$dir_name/$new_name"
+
+    if [ -n "$new_name" ] &&
+        [ -e "$new_path" ] &&
+        [ "$new_path" != "$file" ];
+    then
+        choice="$(printf "no\nyes" | dmenu -p "overwrite?" -w "$(xdotool getactivewindow)")" ||
+            return 1
+        [ "$choice" != "yes" ] && return 1
+    fi
+
+    mv -f "$file" "$new_path"
+
+}
+
+scan_qrcode() {
+    qrtool decode "$file" | xsel -b &&
+        notify-send "nsxiv" "Copied to clipboard"
+}
+
+yank_path() {
+    printf '%s' "$file" | xsel -b
+}
+
+rotate() {
+    degree="$1"
+    case "$(file --mime-type -Lb "$file")" in
+        image/jpeg*)
+            tmp="${file}.tmp"
+            jpegtran -rotate "$degree" -copy all -outfile "$tmp" "$file" &&
+                mv "$tmp" "$file"
+            ;;
+        *)
+            mogrify -rotate "$degree" "$file"
+            ;;
+    esac
+}
+
+flip() {
+    case "$(file --mime-type -Lb "$file")" in
+        image/jpeg*)
+            tmp="${file}.tmp"
+            jpegtran -flip vertical -copy all -outfile "$tmp" "$file" &&
+                mv "$tmp" "$file"
+            ;;
+        *)
+            mogrify -flip "$file"
+            ;;
+    esac
+}
+
+flop() {
+    case "$(file --mime-type -Lb "$file")" in
+        image/jpeg*)
+            tmp="${file}.tmp"
+            jpegtran -flip horizontal -copy all -outfile "$tmp" "$file" &&
+                mv "$tmp" "$file"
+            ;;
+        *)
+            mogrify -flop "$file"
+            ;;
+    esac
+}
+
+while read file; do
+    case "$1" in
+        "d") delete ;;
+        "e") show_exif ;;
+        "r") rename_img ;;
+        "s") scan_qrcode ;;
+        "y") yank_path;;
+        "comma") rotate 270 ;;
+        "period") rotate  90 ;;
+        "minus") flip ;;
+        "backslash") flop ;;
+    esac
+done

@@ -1,0 +1,16 @@
+#!/bin/sh
+# Repeat delay and rate
+
+opt="$(printf "reset\nset" | dmenu -p "${0##*/}")"
+
+case "$opt" in
+    reset)
+        reset="$(grep 'xset r rate ' $HOME/.xinitrc)"
+        $reset
+        ;;
+    set)
+        delay="$(dmenu -p "delay" </dev/null)" || exit 1
+        rate="$(dmenu -p "rate" </dev/null)" || exit 1
+        xset r rate "$delay" "$rate"
+        ;;
+esac

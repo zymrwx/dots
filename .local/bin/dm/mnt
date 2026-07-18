@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+# Mount disks
+
+blk_list="$(lsblk -rpo 'name,type,size,uuid,label,mountpoint,fstype' \
+    | tail -n +2 \
+    | grep -ve ' disk ' -ve SWAP -ve /boot -ve /mapper/)"
+
+usage() {
+    cat <<EOF
+USAGE:  ${0##*/} [OPTION]
+
+    mount device, also unlock for LUKS container
+
+OPTIONS:
+
+-u
+    unmount device, also lock for LUKS container
+
+-h
+    print this help message
+EOF
+    exit 0
+}
+
+sel_dev() {
+    if [ -n "$DISPLAY" ]; then
+        sel="$(printf '%s' "$blk_list" | dmenu -l 9 -p "$1")"
+    else
+        sel="$(printf '%s' "$blk_list" | fzf)"
+    fi
+
+    part="$(echo "$sel" | awk '{print $1}')"
+
+    uuid="$(echo "$sel" | awk '{print $4}')"
+}
+
+lock() {
+    udisksctl lock -b "$part"
+}
+
+unlock() {
+    if [ -n "$DISPLAY" ]; then
+        pass="$(dmenu -P -p "passphrase" </dev/null)"
+        udisksctl unlock -b "$part" --key-file <(echo -n "$pass")
+    else
+        udisksctl unlock -b "$part"
+    fi
+
+}
+
+mount() {
+    if [[ "$sel" =~ "crypto_LUKS" ]]; then
+        unlock && udisksctl mount -b "/dev/mapper/luks-${uuid}"
+    else
+        udisksctl mount -b "$part"
+    fi
+}
+
+unmount() {
+    if [[ "$sel" =~ "crypto_LUKS" ]]; then
+        udisksctl unmount -b "/dev/mapper/luks-${uuid}" && lock
+    else
+        udisksctl unmount -b "$part"
+    fi
+}
+
+if [ -z "$1" ]; then
+    sel_dev "${0##*/}"; mount
+else
+    case "$1" in
+        -u) sel_dev "${0##*/} -u"; unmount ;;
+        *)  usage ;;
+    esac
+fi

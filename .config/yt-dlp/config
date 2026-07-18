@@ -1,0 +1,5 @@
+# vim:ft=conf
+
+--output "%(title).200B.%(ext)s"
+
+--cookies-from-browser chromium:~/.local/share/qutebrowser/

@@ -1,0 +1,9 @@
+#!/bin/sh
+# Extract Audio Track from video without recoding
+
+for file in "$@"; do
+    name="${1%.*}"
+    ext="$(mediainfo --Inform='Audio;%Format%' "$1" | tr '[:upper:]' '[:lower:]')"
+
+    ffmpeg -i "$1" -vn -acodec copy "${name}.${ext}"
+done

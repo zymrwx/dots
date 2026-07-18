@@ -1,0 +1,31 @@
+#!/bin/sh
+
+profile="/sys/firmware/acpi/platform_profile"
+
+if [ -f "$profile" ]; then
+    read -r value < "$profile" 2>/dev/null
+else
+    value=""
+fi
+
+case "$value" in
+    low-power|quiet)
+        icon="󱑰"
+        value="SAV"
+        ;;
+    balanced)
+        icon="󱜝"
+        value="BAL"
+        ;;
+    performance)
+        icon="󱑯"
+        value="PRF"
+        ;;
+esac
+
+if [ -z "$value" ]; then
+    icon="󰠝"
+    printf '%s\n' "$icon"
+else
+    printf '%s %s\n' "$icon" "$value"
+fi

@@ -1,0 +1,50 @@
+#!/bin/sh
+# Add ID3 tags in bulk
+
+usage() {
+    cat <<EOF
+USAGE:  ${0##*/} [FILE]...
+
+    Add ID3 tags to files with specific extensions under the current directory,
+    and touch the .lrc files for each song.
+
+EXAMPLE:
+    ${0##*/} *.mp3
+
+Directory structures are expected to be:
+.
+├── 01_First Song.lrc
+├── 01_First Song.mp3
+├── 02_Second Song.lrc
+├── 02_Second Song.mp3
+└── cover.jpg
+EOF
+    exit 0
+}
+
+[ -z "$1" ] && usage
+
+ls "$@" || exit 1
+
+picture="$(pwd)/cover.jpg"
+set -x
+
+read -p "artist: " artist
+read -p "album: " album
+read -p "year: " year
+
+for i in "$@"; do
+    title="${i#*_}"
+    title="${title%.*}"
+    track="${i%%_*}"
+
+    touch "${i%.*}.lrc"
+
+    mid3v2 "$i" \
+           -a "$artist" \
+           -A "$album" \
+           -y "$year" \
+           -t "$title" \
+           -T "$track" \
+           -p "$picture"
+done

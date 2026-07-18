@@ -1,0 +1,60 @@
+#!/bin/sh
+# color print to the entire screen
+
+usage() {
+    cat <<EOF
+USAGE: ${0##*/} RRGGBB
+    color print to the entire screen (requires true color support)
+EOF
+    exit 0
+}
+
+[ -z "$1" ] && usage
+
+hex="$1"
+
+hex="${hex#\#}"
+
+if [ ${#hex} -eq 3 ]; then
+    r=$(echo "$hex" | cut -c1)
+    g=$(echo "$hex" | cut -c2)
+    b=$(echo "$hex" | cut -c3)
+    hex="${r}${r}${g}${g}${b}${b}"
+fi
+
+r_dec=$(printf "%d" "0x$(echo "$hex" | cut -c1-2)")
+g_dec=$(printf "%d" "0x$(echo "$hex" | cut -c3-4)")
+b_dec=$(printf "%d" "0x$(echo "$hex" | cut -c5-6)")
+
+# Calculate luminance to determine text fg color
+luminance=$(( (299 * r_dec + 587 * g_dec + 114 * b_dec) / 1000 ))
+
+if [ "$luminance" -gt 128 ]; then
+    fg_r=0
+    fg_g=0
+    fg_b=0
+else
+    fg_r=255
+    fg_g=255
+    fg_b=255
+fi
+
+printf '\033[2J\033[H'
+printf '\033[48;2;%d;%d;%dm' "$r_dec" "$g_dec" "$b_dec"
+
+rows=$(tput lines 2>/dev/null || echo 24)
+cols=$(tput cols 2>/dev/null || echo 80)
+
+spaces=$(printf "%${cols}s" "")
+
+i=0
+while [ "$i" -lt "$rows" ]; do
+    printf '%s\n' "$spaces"
+    i=$((i + 1))
+done
+
+printf '\033[%d;1H' "$rows"
+printf '\033[38;2;%d;%d;%dm' "$fg_r" "$fg_g" "$fg_b"
+printf "Press Enter to reset... "
+read -r dummy
+printf '\033[0m\033[2J\033[H'

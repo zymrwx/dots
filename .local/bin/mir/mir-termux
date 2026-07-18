@@ -1,0 +1,85 @@
+#!/bin/sh
+# Mirror files to termux
+#
+# Termux username is fixed and assigned by Android when Termux is installed.
+# When you SSH into Termux, the server ignores whatever username you send and
+# logs you into the same environment anyway. Not specifying a username sends
+# the local username, and Termux ignores it and it works.
+
+
+port="8022"
+
+source="$HOME/"
+target="/data/data/com.termux/files/home/storage/shared/data/"
+
+usage() {
+    cat <<EOF
+USAGE:  ${0##*/} [OPTION] IP
+
+OPTIONS:
+
+-p
+    Change the port of sshd on termux, instead of the default $port
+EOF
+    exit 0
+}
+
+dry_run() {
+    sync_cmd "--dry-run"
+}
+
+sync_cmd() {
+    opt="$1"
+    rsync "$opt" -e "ssh -p $port" -av --progress --delete-after \
+        --exclude=".*/" \
+        --include="doc/" \
+        --include="doc/books/" \
+        --include="doc/books/**/" \
+        --include="doc/books/**.epub" \
+        --exclude="doc/books/*" \
+        --include="mus/" \
+        --include="mus/artists/" \
+        --include="mus/artists/**" \
+        --include="mus/collections/" \
+        --include="mus/collections/**" \
+        --include="pic/" \
+        --include="pic/camera/" \
+        --include="pic/camera/**" \
+        --include="pic/collections/" \
+        --include="pic/collections/**" \
+        --include="pic/wallpapers/" \
+        --include="pic/wallpapers/**" \
+        --include="vid" \
+        --include="vid/camera/" \
+        --include="vid/camera/**" \
+        --include="vid/collections/" \
+        --include="vid/collections/**" \
+        --exclude="*" \
+        $source ${ip_addr}:$target
+}
+
+run() {
+    sync_cmd "-h"
+}
+
+if [ -z "$1" ]; then
+    usage
+else
+    while [ -n "$1" ]; do
+        case "$1" in
+            -p)
+                shift
+                port="$1"
+                ;;
+            *)
+                ip_addr="$1"
+                ;;
+        esac
+        shift
+    done
+fi
+
+dry_run
+
+read -p "continue syncing?(y/n): " REPLY
+[ "$REPLY" = "y" ] && run

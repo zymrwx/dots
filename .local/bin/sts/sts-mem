@@ -1,0 +1,19 @@
+#!/bin/sh
+# Print memory usage in percentage
+
+icon=""
+
+# $ head -3 /proc/meminfo
+# MemTotal:       23797612 kB
+# MemFree:        20712748 kB
+# MemAvailable:   21596984 kB
+{
+    read -r _ mem_total _
+    read -r _
+    read -r _ mem_available _
+} < /proc/meminfo
+
+mem_used=$((mem_total - mem_available))
+value=$((100 * mem_used / mem_total))
+
+printf '%s %s%%\n' "$icon" "$value"

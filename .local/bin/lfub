@@ -1,0 +1,24 @@
+#!/bin/sh
+
+set -euf
+
+if [ -n "${DISPLAY-}" ] &&
+   [ -z "${FIFO_UEBERZUG-}" ] &&
+   [ -z "${DVTM-}" ];
+then
+  export FIFO_UEBERZUG="$XDG_RUNTIME_DIR/lf-ueberzug-$$"
+
+  cleanup() {
+    exec 3>&-
+    rm -- "$FIFO_UEBERZUG"
+  }
+
+  mkfifo -- "$FIFO_UEBERZUG"
+  ueberzug layer -s <"$FIFO_UEBERZUG" &
+  exec 3>"$FIFO_UEBERZUG"
+  trap cleanup EXIT INT TERM HUP QUIT
+
+  lf "$@" 3>&-
+else
+  exec lf "$@"
+fi

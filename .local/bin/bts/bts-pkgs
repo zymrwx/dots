@@ -1,0 +1,261 @@
+#!/bin/sh
+
+default_cmd="echo"
+pkg_cmd="$default_cmd"
+
+usage() {
+    cat <<EOF
+USAGE: ${0##*/} [--install] [OPTION]...
+
+    Without '-install', only print packages to STDOUT
+
+OPTIONS:
+
+--install
+    install packages instead of printing to STDOUT
+--base
+    add base packages
+--extra
+    add extra packages
+--xorg
+    add xorg packages
+--dwm-deps
+    add DWM stack dependencies
+--ime
+    add IME
+--gui
+    add gui tools
+--dev
+    add dev tools
+--all
+    add all
+EOF
+    exit 0
+}
+
+add_base() {
+    pkg="
+        $pkg
+        archlinux-contrib
+        base
+        base-devel
+        bash-completion
+        bottom
+        efibootmgr
+        firewalld
+        fzf
+        git
+        lf
+        linux-firmware
+        linux-lts
+        linux-lts-headers
+        lvm2
+        man-db
+        networkmanager
+        openbsd-netcat
+        openssh
+        pacman-contrib
+        rsync
+        sbctl
+        stow
+        tree
+        vim
+    "
+}
+
+add_extra() {
+    pkg="
+        $pkg
+        7zip
+        android-file-transfer
+        android-tools
+        bc
+        ffmpeg
+        ffmpegthumbnailer
+        gnome-epub-thumbnailer
+        imagemagick
+        mpc
+        mpd
+        pass
+        perl-image-exiftool
+        poppler
+        python-mutagen
+        qrtool
+        rmpc
+        sdcv
+        task
+        tlp
+        transmission-cli
+        udisks2
+        unrar-free
+        unzip
+        yt-dlp
+        zip
+    "
+}
+
+add_fonts() {
+    pkg="
+        $pkg
+        adobe-source-code-pro-fonts
+        noto-fonts
+        noto-fonts-cjk
+        noto-fonts-emoji
+        ttf-nerd-fonts-symbols
+    "
+
+}
+
+add_audio() {
+    pkg="
+        $pkg
+        pipewire
+        pipewire-jack
+        pipewire-pulse
+        wiremix
+    "
+}
+
+
+add_themes() {
+    pkg="
+        $pkg
+        gnome-themes-extra
+        qt6ct
+    "
+}
+
+add_xorg() {
+    add_base
+    add_fonts
+    add_themes
+
+    pkg="
+        $pkg
+        autorandr
+        brightnessctl
+        clipmenu
+        dunst
+        nvim 
+        hsetroot
+        libnotify
+        maim
+        picom
+        redshift
+        slop
+        ueberzugpp
+        xdotool
+        xorg-server
+        xorg-xinit
+        xorg-xinput
+        xorg-xkill
+        xorg-xrandr
+        xorg-xset
+        xorg-xsetroot
+        xsel
+        xss-lock
+    "
+}
+
+add_dwm_deps() {
+    add_xorg
+    add_audio
+
+    # nsxiv dependences
+    pkg="
+        $pkg
+        imlib2
+        inotify-tools
+        libexif
+    "
+}
+
+add_ime() {
+    pkg="
+        $pkg
+        fcitx5
+        fcitx5-chinese-addons
+        fcitx5-gtk
+    "
+}
+
+add_gui() {
+    pkg="
+        $pkg
+        mpv
+        qutebrowser
+        python-adblock
+        zathura
+        zathura-pdf-mupdf
+
+        libvirt
+        virt-manager
+        qemu-desktop
+        dnsmasq
+    "
+}
+
+add_dev() {
+    pkg="
+        $pkg
+        code
+
+        jdk-openjdk
+        openjdk-src
+        openjdk-doc
+    "
+}
+
+
+add_all() {
+    add_base
+    add_extra
+    add_dwm_deps
+    add_ime
+    add_gui
+    add_dev
+}
+
+
+[ -z "$1" ] && usage
+
+while [ -n "$1" ]; do
+    case "$1" in
+        --install)
+            pkg_cmd="sudo pacman -S --needed"
+            ;;
+        --base)
+            add_base
+            ;;
+        --extra)
+            add_extra
+            ;;
+        --xorg)
+            add_xorg
+            ;;
+        --dwm-deps)
+            add_dwm_deps
+            ;;
+        --ime)
+            add_ime
+            ;;
+        --gui)
+            add_gui
+            ;;
+        --dev)
+            add_dev
+            ;;
+        --all)
+            add_all
+            ;;
+        *)
+            usage
+            ;;
+    esac
+    shift
+done
+
+[ -n "$pkg" ] && {
+    echo "pkg:"
+    $pkg_cmd $pkg
+}

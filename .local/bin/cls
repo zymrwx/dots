@@ -1,0 +1,118 @@
+#!/bin/sh
+# Wrapper script for cls
+
+cls="cls-linux-amd64"
+cls_home="$HOME/.local/app/cls"
+[ -d "$cls_home" ] || mkdir -p "$cls_home"
+config="$cls_home/config"
+url="$cls_home/url"
+exe_prefix="$cls_home/$cls"
+update_interval="43200"
+log="$XDG_RUNTIME_DIR/cls.log"
+
+# Choose the neweset version
+exe="$(command ls -v "$exe_prefix"* | tail -1)"
+
+usage() {
+    cat <<EOF
+Usage: cls [OPTION]
+
+-c
+    check update interval and update on demand
+-u
+    force update config
+-h
+    print usage
+-d
+    daemonize
+-r
+    restart daemon
+-l
+    open log
+EOF
+    exit 0
+}
+
+check_interval() {
+    current_date="$(date '+%s')"
+    modified_date="$(stat -c %X "$config" | cut -d' ' -f1)"
+
+    if [ ! -f "$config" ] || 
+        [ $((current_date - modified_date)) -gt "$update_interval" ];
+    then
+        update_config
+    else
+        echo "Already updated within $((update_interval / 60 / 60))H"
+    fi
+}
+
+update_config() {
+    result="$(cat "$url" | xargs curl)"
+
+    if [ -n "$result" ]; then
+        rm_old_config
+        echo "$result" > "$config"
+    else
+        echo "Updating failed"
+    fi
+}
+
+rm_old_config() {
+    if [ -f "$config" ]; then
+        mv "$config" "${config}-$(date -I)"
+
+        # Keep 3 most recent
+        ls -rv "${config}-"* | tail -n +4 | xargs -r rm
+    fi
+}
+
+init() {
+    if pgrep -f "$(basename $exe)" > /dev/null; then
+        echo "Already running"
+    else
+        "$exe" -d "$cls_home" -f "$config"
+    fi
+}
+
+daemonize() {
+    if pgrep -f "$(basename $exe)" > /dev/null; then
+        echo "Already running"
+    else
+        nohup "$exe" -d "$cls_home" -f "$config" > "$log" 2>&1 &
+    fi
+}
+
+restart() {
+    pkill -f "$(basename "$exe")"
+    daemonize
+}
+
+open_log() {
+    tail -F "$log"
+}
+
+[ -z "$1" ] && init
+
+while [ -n "$1" ]; do
+    case "$1" in 
+        -c)
+            check_interval
+            ;;
+        -u)
+            update_config
+            ;;
+        -d)
+            daemonize
+            ;;
+        -r)
+            restart
+            ;;
+        -l)
+            open_log
+            ;;
+        -h)
+            usage
+            ;;
+    esac
+    shift
+done

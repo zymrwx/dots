@@ -1,0 +1,18 @@
+# vim:ft=conf
+
+# software
+https://suckless.org
+https://github.com/martanne/dvtm
+https://github.com/martanne/abduco
+https://github.com/torrinfail/dwmblocks
+https://codeberg.org/nsxiv/nsxiv
+
+# tools
+sdcv | https://stardict.uber.space/zh_CN/index.html
+lyrics | https://lrclib.net/
+font nerdfonts|https://www.nerdfonts.com/cheat-sheet
+
+# archlinux
+AUR |https://aur.archlinux.org
+ALA | https://archive.archlinux.org
+Arch Wiki | https://wiki.archlinux.org

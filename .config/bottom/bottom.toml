@@ -1,0 +1,6 @@
+[flags]
+table_gap = "space"
+battery = true
+
+[processes]
+default_memory_value = true
